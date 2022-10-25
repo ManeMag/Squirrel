@@ -2,6 +2,7 @@
 {
     public class Progression : UserRelatedModel
     {
+        public Progression() { }
         public Progression(User user) : base(user){ }
 
         public int Id { get; set; }

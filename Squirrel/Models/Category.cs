@@ -2,6 +2,7 @@
 {
     public class Category : UserRelatedModel
     {
+        public Category() { }
         public Category(string name, string color, User user) : base(user)
         {
             Name = name;

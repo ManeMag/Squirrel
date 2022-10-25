@@ -2,6 +2,7 @@
 {
     public class PiggyBank : UserRelatedModel
     {
+        public PiggyBank() { }
         public PiggyBank(string name, double goal, User user) : base(user)
         {
             Name = name;

@@ -2,6 +2,7 @@
 {
     public class Subscription : UserRelatedModel
     {
+        public Subscription() { }
         public Subscription(string name, DateTime day, double price, TimeSpan period, User user) : base(user)
         {
             Name = name;

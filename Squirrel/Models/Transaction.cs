@@ -2,6 +2,7 @@
 {
     public class Transaction
     {
+        public Transaction() { }
         public Transaction(DateTime time, double amount, string description, Category category)
         {
             Time = time;

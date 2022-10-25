@@ -2,6 +2,7 @@
 {
     public class Achievement
     {
+        public Achievement() { }
         public Achievement(string name, string description, double goal)
         {
             Name = name;
