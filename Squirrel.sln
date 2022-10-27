@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Squirrel", "Squirrel\Squirrel.csproj", "{DAF89D38-3241-458B-A1DA-B5DA4004BA50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DAF89D38-3241-458B-A1DA-B5DA4004BA50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAF89D38-3241-458B-A1DA-B5DA4004BA50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAF89D38-3241-458B-A1DA-B5DA4004BA50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAF89D38-3241-458B-A1DA-B5DA4004BA50}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30582EF5-7062-4C5B-B333-DA6895211151}
+	EndGlobalSection
+EndGlobal
