@@ -7,7 +7,7 @@ namespace Squirrel.Controllers
     [Route("api/[controller]")]
     public class AccountController : Controller
     {
-        private readonly ApplicationContext context;
+        private readonly ApplicationContext _context;
 
         public AccountController(ApplicationContext context)
         {
