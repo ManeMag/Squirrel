@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Squirrel.Models;
 
-namespace Squirrel.Models
+namespace Squirrel.Entities
 {
     public class User : IdentityUser
     {

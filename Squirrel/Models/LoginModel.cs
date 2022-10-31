@@ -10,8 +10,6 @@ namespace Squirrel.Models
 
         [DataType(DataType.Password)]
         public string? Password { get; set; }
-
-        [Display(Name = "Запомнить?")]
         public bool RememberMe { get; set; }
     }
 }
