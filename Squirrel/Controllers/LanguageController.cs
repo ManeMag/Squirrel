@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace Squirrel.Controllers
 {
@@ -14,6 +15,19 @@ namespace Squirrel.Controllers
                                     value: CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
                                     options: new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
             return Ok();
+        }
+        [HttpGet]
+        public IActionResult GetCurrencies()
+        {
+            List<string> cultureList = new();
+            var cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(c => c.LCID);
+            foreach (var culture in cultures)
+            {
+                RegionInfo region = new(culture);
+                if (!cultureList.Contains(region.CurrencySymbol))
+                    cultureList.Add(region.CurrencySymbol);
+            }
+            return base.Ok(cultureList.OrderBy(c => c.ToString()));
         }
     }
 }
