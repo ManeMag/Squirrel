@@ -16,8 +16,6 @@ var configuration = builder.Configuration;
 
 services.AddTransient<IEmailSender, EmailSender>();
 
-services.AddSingleton(configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
-
 services.AddAuthentication().AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
 
 services.AddDbContext<ApplicationContext>(options => options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));

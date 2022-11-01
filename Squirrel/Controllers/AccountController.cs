@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using Squirrel.Contexts;
 using Squirrel.Entities;
 using Squirrel.Models;
+using Squirrel.Services;
 using System.Text.Encodings.Web;
 
 namespace Squirrel.Controllers
@@ -28,39 +29,14 @@ namespace Squirrel.Controllers
             _signInManager = signInManager;
             _localizer = localizer;
             _emailSender = emailSender;
-            _ = RoleInit(userManager, roleManager);
+            _ = RoleInitializer.RoleInit(userManager, roleManager);
         }
 
-        private static async Task RoleInit(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
-        {
-            string adminEmail = "admin@nextgenmail.com";
-            string password = "_Aa123456";
-
-            if (await roleManager.FindByNameAsync("admin") == null)
-                await roleManager.CreateAsync(new IdentityRole("admin"));
-
-            if (await roleManager.FindByNameAsync("user") == null)
-                await roleManager.CreateAsync(new IdentityRole("user"));
-
-            if (await roleManager.FindByNameAsync("service") == null)
-                await roleManager.CreateAsync(new IdentityRole("service"));
-
-            if (await userManager.FindByEmailAsync(adminEmail) == null)
-            {
-                User admin = new() { Email = adminEmail, UserName = adminEmail};
-                IdentityResult result = await userManager.CreateAsync(admin, password);
-                if (result.Succeeded)
-                {
-                    await userManager.ConfirmEmailAsync(admin!, await userManager.GenerateEmailConfirmationTokenAsync(admin));
-                    await userManager.AddToRoleAsync(admin, "admin");
-                }
-            }
-        }
 
         [HttpPost]
         public async Task<IActionResult> AuthenticateAsync(LoginModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, false);
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
             return result.Succeeded ? Ok() : BadRequest(new[] { _localizer["Invalid login and/or password"].Value });
         }
 
@@ -81,11 +57,9 @@ namespace Squirrel.Controllers
 
                     return Ok();
                 }
-                else
-                    return BadRequest(result.Errors.Select(e => e.Description));
+                return BadRequest(result.Errors.Select(e => e.Description));
             }
-            else
-                return BadRequest(new[] { _localizer["Password are not the same"].Value });
+            return BadRequest(new[] { _localizer["Password are not the same"].Value });
         }
 
         [Authorize]
@@ -106,10 +80,9 @@ namespace Squirrel.Controllers
 
 
         [HttpPatch]
-        public async Task<IActionResult> ConfirmEmailAsync(string Id, string code, string callbackUrl)
+        public async Task<IActionResult> ConfirmEmailAsync(string id, string code, string callbackUrl)
         {
-            Console.WriteLine(callbackUrl);
-            var user = await _userManager.FindByIdAsync(Id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user != null)
                 return Redirect($"http://{callbackUrl}?success=0");
             var result = await _userManager.ConfirmEmailAsync(user!, code);
@@ -158,8 +131,7 @@ namespace Squirrel.Controllers
                 var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
                 return result.Succeeded ? Ok() : BadRequest(result.Errors.Select(e => e.Description));
             }
-            else
-                return BadRequest(new[] { _localizer["Passwords are not the same"].Value });
+            return BadRequest(new[] { _localizer["Passwords are not the same"].Value });
         }
     }
 }
