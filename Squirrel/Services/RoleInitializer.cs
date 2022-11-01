@@ -10,16 +10,16 @@ namespace Squirrel.Services
             string adminEmail = "admin@nextgenmail.com";
             string password = "_Aa123456";
 
-            if (await roleManager.FindByNameAsync("admin") == null)
+            if (await roleManager.FindByNameAsync("admin") is null)
                 await roleManager.CreateAsync(new IdentityRole("admin"));
 
-            if (await roleManager.FindByNameAsync("user") == null)
+            if (await roleManager.FindByNameAsync("user") is null)
                 await roleManager.CreateAsync(new IdentityRole("user"));
 
-            if (await roleManager.FindByNameAsync("service") == null)
-                await roleManager.CreateAsync(new IdentityRole("service"));
+            if (await roleManager.FindByNameAsync("premium") is null)
+                await roleManager.CreateAsync(new IdentityRole("premium"));
 
-            if (await userManager.FindByEmailAsync(adminEmail) == null)
+            if (await userManager.FindByEmailAsync(adminEmail) is null)
             {
                 User admin = new() { Email = adminEmail, UserName = adminEmail };
                 IdentityResult result = await userManager.CreateAsync(admin, password);

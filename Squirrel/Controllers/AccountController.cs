@@ -95,7 +95,7 @@ namespace Squirrel.Controllers
         public async Task<IActionResult> Delete()
         {
             User user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            if (user is null)
                 return BadRequest(new[] { _localizer["User not found"].Value });
             var result = await _userManager.DeleteAsync(user);
             return result.Succeeded ? Ok() : BadRequest(result.Errors.Select(e => e.Description));
@@ -126,7 +126,7 @@ namespace Squirrel.Controllers
             if (model.Same)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                if (user == null)
+                if (user is null)
                     return BadRequest(new[] { _localizer["No user found"].Value });
                 var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
                 return result.Succeeded ? Ok() : BadRequest(result.Errors.Select(e => e.Description));
