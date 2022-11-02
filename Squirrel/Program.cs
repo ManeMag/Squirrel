@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
@@ -17,15 +16,7 @@ var configuration = builder.Configuration;
 
 services.AddTransient<IEmailSender, EmailSender>();
 
-services.AddAuthentication()
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-    {
-        options.ClientId = configuration["Authentication:Google:ClientId"];
-        options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-        options.SaveTokens = true;
-        options.SignInScheme = IdentityConstants.ExternalScheme;
-    }); ;
+services.AddAuthentication().AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
 
 services.AddDbContext<ApplicationContext>(options => options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
 services.AddIdentity<User, IdentityRole>(options =>
