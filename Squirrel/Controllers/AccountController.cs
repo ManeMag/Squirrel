@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -7,6 +8,7 @@ using Squirrel.Contexts;
 using Squirrel.Entities;
 using Squirrel.Models;
 using Squirrel.Services;
+using System.Security.Claims;
 using System.Text.Encodings.Web;
 
 namespace Squirrel.Controllers
@@ -132,6 +134,38 @@ namespace Squirrel.Controllers
                 return result.Succeeded ? Ok() : BadRequest(result.Errors.Select(e => e.Description));
             }
             return BadRequest(new[] { _localizer["Passwords are not the same"].Value });
+        }
+
+
+        [HttpGet]
+        public IActionResult Google(string? returnUrl = null)
+        {
+            returnUrl ??= Url.Content("/");
+            string? redirectUrl = Url.Action("GoogleResponse", "Account", new { returnUrl });
+            AuthenticationProperties properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+            return new ChallengeResult("Google", properties);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GoogleResponseAsync(string returnUrl)
+        {
+            ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info != null)
+            {
+                var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+                if (!signInResult.Succeeded)
+                {
+                    User user = new(info.Principal.FindFirstValue(ClaimTypes.Email));
+                    IdentityResult identResult = await _userManager.CreateAsync(user);
+                    if (identResult.Succeeded)
+                    {
+                        identResult = await _userManager.AddLoginAsync(user, info);
+                        if (identResult.Succeeded)
+                            await _signInManager.SignInAsync(user, false);
+                    }
+                }
+            }
+            return Redirect(returnUrl);
         }
     }
 }
