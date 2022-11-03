@@ -59,7 +59,7 @@ namespace Squirrel.Controllers
                 }
                 return BadRequest(result.Errors.Select(e => e.Description));
             }
-            return BadRequest(new[] { _localizer["Password are not the same"].Value });
+            return BadRequest(new[] { _localizer["Passwords are not the same"].Value });
         }
 
         [Authorize]
@@ -127,7 +127,7 @@ namespace Squirrel.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user is null)
-                    return BadRequest(new[] { _localizer["No user found"].Value });
+                    return BadRequest(new[] { _localizer["User no found"].Value });
                 var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
                 return result.Succeeded ? Ok() : BadRequest(result.Errors.Select(e => e.Description));
             }
