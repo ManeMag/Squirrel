@@ -27,7 +27,29 @@ class AuthorizationActivity : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthorizationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val intent = Intent(this, MainActivity::class.java)
+        val intent2 = Intent(this, AuthorizationActivity::class.java)
+        val queue = Volley.newRequestQueue(this)
+        val url = "http://geneirodan.zapto.org:23451/api/account/email"
+        val stringRequest: StringRequest = object : StringRequest(
+            Method.GET,
+            url,
+            object : Response.Listener<String?> {
+                override fun onResponse(response: String?) {
+                    startActivity(intent)
+                }
+            },
+            object : Response.ErrorListener {
+                override fun onErrorResponse(error: VolleyError) {
+
+                }
+            }) {
+        }
+        queue.add(stringRequest)
     }
+
+
 
     fun onClickGoRegister (view: View) {
 
@@ -41,7 +63,7 @@ class AuthorizationActivity : AppCompatActivity()  {
     }
 
     fun onClickSignIn (view: View) {
-        val intent = Intent(this, RegisterActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         if (checkOnEmpty()) {
             Toast.makeText(this, "Fill in all the fields", Toast.LENGTH_LONG).show()
             return
