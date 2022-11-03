@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Squirrel.Contexts;
 using Squirrel.Entities;
+using Squirrel.Extensions;
 using Squirrel.Models;
 using Squirrel.Services;
 using System.Security.Claims;
@@ -40,7 +41,7 @@ namespace Squirrel.Controllers
         public async Task<IActionResult> AuthenticateAsync(LoginModel model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
-            return result.Succeeded ? Ok() : BadRequest(new[] { _localizer["Invalid login and/or password"].Value });
+            return result.Succeeded ? Ok() : "Invalid login and/or password".ToBadRequestUsing(_localizer);
         }
 
         [HttpPost]
@@ -70,7 +71,7 @@ namespace Squirrel.Controllers
                     return BadRequest(new[] { _localizer["Something went wrong. Please try again"].Value });
                 }
             }
-            return BadRequest(new[] { _localizer["Passwords are not the same"].Value });
+            return "Passwords are not the same".ToBadRequestUsing(_localizer);
         }
 
         [Authorize]
