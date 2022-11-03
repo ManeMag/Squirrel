@@ -17,10 +17,10 @@ namespace Squirrel.Controllers
     [Route("api/[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly IStringLocalizer<SharedResource> _localizer;
-        private readonly IEmailSender _emailSender;
+        private readonly UserManager<User>                  _userManager;
+        private readonly SignInManager<User>                _signInManager;
+        private readonly IStringLocalizer<SharedResource>   _localizer;
+        private readonly IEmailSender                       _emailSender;
         public AccountController(UserManager<User> userManager,
                                  SignInManager<User> signInManager,
                                  IStringLocalizer<SharedResource> localizer,
@@ -94,7 +94,7 @@ namespace Squirrel.Controllers
         public async Task<IActionResult> ConfirmEmailAsync(string id, string code, string callbackUrl)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if (user != null)
+            if (user is null)
                 return Redirect($"http://{callbackUrl}?success=0");
             var result = await _userManager.ConfirmEmailAsync(user!, code);
             await _userManager.AddToRoleAsync(user!, "user");
@@ -117,16 +117,16 @@ namespace Squirrel.Controllers
         {
             var callbackUrl = Request.Headers["Origin"].FirstOrDefault();
             var user = await _userManager.FindByEmailAsync(email);
-            if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+            if (user is not null && await _userManager.IsEmailConfirmedAsync(user))
             {
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 callbackUrl += $"{path}?email={email}&code={code}";
                 await _emailSender.SendEmailAsync(email: email,
                                                          subject: _localizer["Password reset"].Value,
                                                          htmlMessage: _localizer["Please confirm your password reset by <a href='{0}'>clicking here</a>.", HtmlEncoder.Default.Encode(callbackUrl!)].Value);
-
+                return Ok();
             }
-            return Ok();
+            return BadRequest(new[] { _localizer["No user found"].Value });
 
         }
 

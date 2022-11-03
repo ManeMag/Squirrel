@@ -11,10 +11,17 @@ namespace Squirrel.Controllers
         [HttpGet]
         public IActionResult SetLanguage(string culture)
         {
-            Response.Cookies.Append(key: CookieRequestCultureProvider.DefaultCookieName,
-                                    value: CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
-                                    options: new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
-            return Ok();
+            try
+            {
+                Response.Cookies.Append(key: CookieRequestCultureProvider.DefaultCookieName,
+                                        value: CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                                        options: new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
         [HttpGet]
         public IActionResult GetCurrencies()
