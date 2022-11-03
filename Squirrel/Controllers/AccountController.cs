@@ -113,7 +113,7 @@ namespace Squirrel.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword(string email, string path)
+        public async Task<IActionResult> ForgotPassword([FromBody]string email, string path)
         {
             var callbackUrl = Request.Headers["Origin"].FirstOrDefault();
             var user = await _userManager.FindByEmailAsync(email);
