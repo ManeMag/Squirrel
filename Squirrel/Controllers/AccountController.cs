@@ -17,21 +17,22 @@ namespace Squirrel.Controllers
     [Route("api/[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly IStringLocalizer<SharedResource> _localizer;
-        private readonly IEmailSender _emailSender;
+        private readonly UserManager<User>                  _userManager;
+        private readonly SignInManager<User>                _signInManager;
+        private readonly IStringLocalizer<SharedResource>   _localizer;
+        private readonly IEmailSender                       _emailSender;
         public AccountController(UserManager<User> userManager,
                                  SignInManager<User> signInManager,
                                  IStringLocalizer<SharedResource> localizer,
                                  IEmailSender emailSender,
-                                 RoleManager<IdentityRole> roleManager)
+                                 RoleManager<IdentityRole> roleManager,
+                                 IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _localizer = localizer;
             _emailSender = emailSender;
-            _ = RoleInitializer.RoleInit(userManager, roleManager);
+            _ = RoleInitializer.RoleInit(userManager, roleManager, configuration);
         }
 
 
@@ -48,18 +49,26 @@ namespace Squirrel.Controllers
             if (model.Same)
             {
                 User user = new(model);
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                try
                 {
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    callbackUrl = Url.ActionLink("ConfirmEmail", "Account", new { user.Id, code, callbackUrl });
-                    await _emailSender.SendEmailAsync(email: model.Email,
-                                                     subject: _localizer["Confirm your email"].Value,
-                                                     htmlMessage: _localizer["Please confirm your account by <a href='{0}'>clicking here</a>.", HtmlEncoder.Default.Encode(callbackUrl!)].Value);
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        callbackUrl = Url.ActionLink("ConfirmEmail", "Account", new { user.Id, code, callbackUrl });
+                        await _emailSender.SendEmailAsync(email: model.Email,
+                                                         subject: _localizer["Confirm your email"].Value,
+                                                         htmlMessage: _localizer["Please confirm your account by <a href='{0}'>clicking here</a>.", HtmlEncoder.Default.Encode(callbackUrl!)].Value);
 
-                    return Ok();
+                        return Ok();
+                    }
+                    return BadRequest(result.Errors.Select(e => e.Description));
                 }
-                return BadRequest(result.Errors.Select(e => e.Description));
+                catch
+                {
+                    await _userManager.DeleteAsync(user);
+                    return BadRequest(new[] { _localizer["Something went wrong. Please try again"].Value });
+                }
             }
             return BadRequest(new[] { _localizer["Passwords are not the same"].Value });
         }
@@ -81,11 +90,11 @@ namespace Squirrel.Controllers
         public async Task<IActionResult> CurrencyAsync() => Ok((await _userManager.GetUserAsync(User)).Currency);
 
 
-        [HttpPatch]
+        [HttpGet]
         public async Task<IActionResult> ConfirmEmailAsync(string id, string code, string callbackUrl)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if (user != null)
+            if (user is null)
                 return Redirect($"http://{callbackUrl}?success=0");
             var result = await _userManager.ConfirmEmailAsync(user!, code);
             await _userManager.AddToRoleAsync(user!, "user");
@@ -104,20 +113,20 @@ namespace Squirrel.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword(string email, string path)
+        public async Task<IActionResult> ForgotPassword([FromBody]string email, string path)
         {
             var callbackUrl = Request.Headers["Origin"].FirstOrDefault();
             var user = await _userManager.FindByEmailAsync(email);
-            if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+            if (user is not null && await _userManager.IsEmailConfirmedAsync(user))
             {
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 callbackUrl += $"{path}?email={email}&code={code}";
                 await _emailSender.SendEmailAsync(email: email,
                                                          subject: _localizer["Password reset"].Value,
                                                          htmlMessage: _localizer["Please confirm your password reset by <a href='{0}'>clicking here</a>.", HtmlEncoder.Default.Encode(callbackUrl!)].Value);
-
+                return Ok();
             }
-            return Ok();
+            return BadRequest(new[] { _localizer["No user found"].Value });
 
         }
 
@@ -138,7 +147,7 @@ namespace Squirrel.Controllers
 
 
         [HttpGet]
-        public IActionResult Google(string? returnUrl = null)
+        public IActionResult GoogleAuth(string? returnUrl = null)
         {
             returnUrl ??= Url.Content("/");
             string? redirectUrl = Url.Action("GoogleResponse", "Account", new { returnUrl });
@@ -150,17 +159,17 @@ namespace Squirrel.Controllers
         public async Task<IActionResult> GoogleResponseAsync(string returnUrl)
         {
             ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info != null)
+            if (info is not null)
             {
                 var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
                 if (!signInResult.Succeeded)
                 {
                     User user = new(info.Principal.FindFirstValue(ClaimTypes.Email));
-                    IdentityResult identResult = await _userManager.CreateAsync(user);
-                    if (identResult.Succeeded)
+                    var createResult = await _userManager.CreateAsync(user);
+                    if (createResult.Succeeded)
                     {
-                        identResult = await _userManager.AddLoginAsync(user, info);
-                        if (identResult.Succeeded)
+                        var loginResult = await _userManager.AddLoginAsync(user, info);
+                        if (loginResult.Succeeded)
                             await _signInManager.SignInAsync(user, false);
                     }
                 }
