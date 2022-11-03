@@ -5,10 +5,10 @@ namespace Squirrel.Services
 {
     public class RoleInitializer
     {
-        public static async Task RoleInit(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task RoleInit(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
-            string adminEmail = "admin@nextgenmail.com";
-            string password = "_Aa123456";
+            string adminEmail = configuration["Admin:Email"];
+            string password = configuration["Admin:Password"];
 
             if (await roleManager.FindByNameAsync("admin") is null)
                 await roleManager.CreateAsync(new IdentityRole("admin"));
