@@ -36,7 +36,7 @@ class AuthorizationActivity : AppCompatActivity()  {
         Program.getRequestQueue()!!.add(stringRequest)
     }
 
-    fun onClickGoRegister () = startActivity(Intent(this, RegisterActivity::class.java))
+    fun onClickGoRegister (view: View) = startActivity(Intent(this, RegisterActivity::class.java))
 
     fun onClickSignIn (view: View) {
         val intent = Intent(this, MainActivity::class.java)
