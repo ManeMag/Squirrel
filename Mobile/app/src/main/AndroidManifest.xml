@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:targetSandboxVersion="1"
         android:theme="@style/Theme.Squirrel"
+        android:name=".Program"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
