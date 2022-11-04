@@ -5,11 +5,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.android.volley.Response
-import com.android.volley.VolleyError
-import com.android.volley.toolbox.StringRequest
+import com.android.volley.Request
 import com.android.volley.toolbox.Volley
 import com.example.squirrel.databinding.ActivityAuthorizationBinding
+import com.example.squirrel.http.StringRequest
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -21,90 +20,58 @@ class AuthorizationActivity : AppCompatActivity()  {
     private lateinit var binding : ActivityAuthorizationBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         supportActionBar?.hide()
-
         super.onCreate(savedInstanceState)
-        binding = ActivityAuthorizationBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         val intent = Intent(this, MainActivity::class.java)
-        val intent2 = Intent(this, AuthorizationActivity::class.java)
-        val queue = Volley.newRequestQueue(this)
-        val url = "http://geneirodan.zapto.org:23451/api/account/email"
-        val stringRequest: StringRequest = object : StringRequest(
-            Method.GET,
-            url,
-            object : Response.Listener<String?> {
-                override fun onResponse(response: String?) {
-                    startActivity(intent)
-                }
+        val stringRequest = StringRequest(
+            Request.Method.GET,
+            "http://geneirodan.zapto.org:23451/api/account/email",
+            { startActivity(intent) },
+            {
+                binding = ActivityAuthorizationBinding.inflate(layoutInflater)
+                setContentView(binding.root)
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError) {
-
-                }
-            }) {
-        }
-        queue.add(stringRequest)
+            ""
+        )
+        Program.getRequestQueue()!!.add(stringRequest)
     }
 
-
-
-    fun onClickGoRegister (view: View) {
-
-        val intent = Intent(this, RegisterActivity::class.java)
-        startActivity(intent)
-
-    }
-
-    fun checkOnEmpty () : Boolean {
-        return binding.loginPrompt.text.toString() == "" || binding.passwordPrompt.text.toString() == ""
-    }
+    fun onClickGoRegister () = startActivity(Intent(this, RegisterActivity::class.java))
 
     fun onClickSignIn (view: View) {
         val intent = Intent(this, MainActivity::class.java)
-        if (checkOnEmpty()) {
+        if (binding.loginPrompt.text.toString() == "" || binding.passwordPrompt.text.toString() == "") {
             Toast.makeText(this, "Fill in all the fields", Toast.LENGTH_LONG).show()
             return
         }
-        var context = this;
-        val queue = Volley.newRequestQueue(this)
-        val url = "http://geneirodan.zapto.org:23451/api/account/authenticate?callbackurl=geneirodan.zapto.org"
+        val context = this
         val jsonBody = JSONObject()
         jsonBody.put("email", binding.loginPrompt.text.toString())
         jsonBody.put("password", binding.passwordPrompt.text.toString())
-        var requestBody = jsonBody.toString()
-        val stringRequest: StringRequest = object : StringRequest(
-            Method.POST,
-            url,
-            object : Response.Listener<String?> {
-                override fun onResponse(response: String?) {
-                    Toast.makeText(context, "Welcome!", Toast.LENGTH_LONG).show()
-                    startActivity(intent)
-                }
+        val requestBody = jsonBody.toString()
+        val stringRequest = StringRequest(
+            Request.Method.POST,
+            "http://geneirodan.zapto.org:23451/api/account/authenticate?callbackurl=geneirodan.zapto.org",
+            {
+                Toast.makeText(context, "Welcome!", Toast.LENGTH_LONG).show()
+                startActivity(intent)
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError) {
-                    var response = error.networkResponse;
-                    if (response != null) {
-                        try {
-                            var res = String(response.data, Charsets.UTF_8)
-                            var arr = JSONArray(res).toList()
-                            for(x in arr)
-                                Toast.makeText(context, x.toString(), Toast.LENGTH_SHORT).show()
-                        } catch (e1 : UnsupportedEncodingException) {
-                            e1.printStackTrace();
-                        } catch (e2 : JSONException) {
-                            e2.printStackTrace();
-                        }
+            { error ->
+                val response = error.networkResponse
+                if (response != null) {
+                    try {
+                        val res = String(response.data, Charsets.UTF_8)
+                        val arr = JSONArray(res).toList()
+                        for(x in arr)
+                            Toast.makeText(context, x.toString(), Toast.LENGTH_SHORT).show()
+                    } catch (e1 : UnsupportedEncodingException) {
+                        e1.printStackTrace()
+                    } catch (e2 : JSONException) {
+                        e2.printStackTrace()
                     }
                 }
-            }) {
-            override fun getBodyContentType(): String = "application/json; charset=utf-8"
-            override fun getBody(): ByteArray = requestBody.toByteArray(Charsets.UTF_8)
-        }
-        queue.add(stringRequest)
+            }, requestBody)
+        Program.getRequestQueue()!!.add(stringRequest)
     }
     @Throws(JSONException::class)
     fun JSONObject.toMap(): Map<String, Any> {
