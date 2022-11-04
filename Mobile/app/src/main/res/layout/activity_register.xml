@@ -68,7 +68,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" АБО "
+                android:text="@string/reg_auth_or"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText"
                 android:textSize="18sp"
@@ -142,6 +142,7 @@
             android:textStyle="bold"
             android:text="@string/privacy_policy_attention"
             android:textSize="@dimen/text_privacy_policy_size"
+            android:layout_marginHorizontal="@dimen/vertical_margin_medium"
             android:textColor="@color/gray_text"
             />
     </LinearLayout>

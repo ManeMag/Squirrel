@@ -15,5 +15,6 @@
     <dimen name="edit_prompt_horizontal_padding">20dp</dimen>
     <dimen name="text_default_size">18sp</dimen>
     <dimen name="text_privacy_policy_size">14sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

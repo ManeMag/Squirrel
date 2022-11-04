@@ -18,5 +18,16 @@ and Privacy Policy.
     <string name="reg_auth_or"> OR </string>
     <string name="no_have_account_button"><u>Don\'t have a profile yet?</u></string>
     <string name="forgot_password"><u>Forgot your password?</u></string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_transactions">Transactions</string>
+    <string name="title_piggy_bank">Piggy Bank</string>
 
 </resources>

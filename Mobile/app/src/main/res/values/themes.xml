@@ -37,4 +37,13 @@
         <item name="android:textColor">@color/white_text</item>
         <item name="android:textSize">@dimen/button_text_size</item>
     </style>
+
+    <style name="Theme.Squirrel.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Squirrel.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Squirrel.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

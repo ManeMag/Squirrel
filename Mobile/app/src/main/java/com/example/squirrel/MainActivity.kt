@@ -1,13 +1,13 @@
 package com.example.squirrel
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.squirrel.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,17 +25,25 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+        //val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val appBarConfiguration = AppBarConfiguration(setOf(
+            R.id.nav_fragment_transaction,
+            R.id.nav_fragment_statistics,
+            R.id.nav_fragment_piggy_bank
             )
         )
 
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        val toolBar = findViewById<Toolbar>(R.id.toolbar)
+        toolBar.setupWithNavController(navController,appBarConfiguration)
+
+
+
+
+
         navView.setupWithNavController(navController)
 
 
+
     }
+
 }

@@ -2,6 +2,9 @@
 buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-serialization:1.7.20"
+        def nav_version = "1.0.0"
+        classpath "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+        classpath "android.arch.navigation:navigation-ui-ktx:$nav_version"
     }
 }
 
