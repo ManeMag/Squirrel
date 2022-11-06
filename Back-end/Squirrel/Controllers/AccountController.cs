@@ -22,17 +22,21 @@ namespace Squirrel.Controllers
         private readonly SignInManager<User>                _signInManager;
         private readonly IStringLocalizer<SharedResource>   _localizer;
         private readonly IEmailSender                       _emailSender;
+        private readonly BaseCategoriesSeeder _seeder;
+
         public AccountController(UserManager<User> userManager,
                                  SignInManager<User> signInManager,
                                  IStringLocalizer<SharedResource> localizer,
                                  IEmailSender emailSender,
                                  RoleManager<IdentityRole> roleManager,
-                                 IConfiguration configuration)
+                                 IConfiguration configuration,
+                                 BaseCategoriesSeeder seeder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _localizer = localizer;
             _emailSender = emailSender;
+            _seeder = seeder;
             _ = RoleInitializer.RoleInit(userManager, roleManager, configuration);
         }
 
@@ -55,13 +59,20 @@ namespace Squirrel.Controllers
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
+                        var seedingResult = await _seeder.SeedCategories(user.Id);
+
+                        if (!seedingResult.IsSuccess)
+                        {
+                            return BadRequest(seedingResult.Errors);
+                        }
+
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         callbackUrl = Url.ActionLink("ConfirmEmail", "Account", new { user.Id, code, callbackUrl });
                         await _emailSender.SendEmailAsync(email: model.Email,
                                                          subject: _localizer["Confirm your email"].Value,
                                                          htmlMessage: _localizer["Please confirm your account by <a href='{0}'>clicking here</a>.", HtmlEncoder.Default.Encode(callbackUrl!)].Value);
 
-                        return Ok();
+                        return CreatedAtAction(nameof(RegisterAsync), user);
                     }
                     return BadRequest(result.Errors.Select(e => e.Description));
                 }

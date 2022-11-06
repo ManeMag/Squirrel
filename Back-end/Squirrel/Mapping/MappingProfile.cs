@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Squirrel.Entities;
 using Squirrel.Requests.Category;
+using Squirrel.Responses.Category;
 
 namespace Squirrel.Mapping
 {
@@ -8,7 +9,13 @@ namespace Squirrel.Mapping
     {
         public MappingProfile()
         {
+            #region Category
+
             CreateMap<CreateCategoryRequest, Category>();
+
+            CreateMap<Category, CategoryViewModel>();
+
+            #endregion
         }
     }
 }
