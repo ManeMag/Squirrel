@@ -23,5 +23,29 @@ namespace Squirrel.UnitTests
 
             result.IsSuccessful.Should().BeTrue();
         }
+
+        [Fact]
+        public void RequestClasses_EndWith_Request()
+        {
+            var result = Types
+                    .InNamespace(BusinessLayerNamespace + ".Requests")
+                    .Should()
+                    .HaveNameEndingWith("Request")
+                    .GetResult();
+
+            result.IsSuccessful.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ResponseClasses_EndWith_Response()
+        {
+            var result = Types
+                    .InNamespace(BusinessLayerNamespace + ".Responce")
+                    .Should()
+                    .HaveNameEndingWith("Responce")
+                    .GetResult();
+
+            result.IsSuccessful.Should().BeTrue();
+        }
     }
 }
