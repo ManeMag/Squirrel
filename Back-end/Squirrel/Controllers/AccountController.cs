@@ -17,10 +17,10 @@ namespace Squirrel.Controllers
     [Route("api/[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly UserManager<User>                  _userManager;
-        private readonly SignInManager<User>                _signInManager;
-        private readonly IStringLocalizer<SharedResource>   _localizer;
-        private readonly IEmailSender                       _emailSender;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly IEmailSender _emailSender;
         private readonly BaseCategoriesSeeder _seeder;
 
         public AccountController(UserManager<User> userManager,
@@ -122,9 +122,9 @@ namespace Squirrel.Controllers
             var result = await _userManager.DeleteAsync(user);
             return result.Succeeded ? Ok() : BadRequest(result.Errors.Select(e => e.Description));
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword([FromBody]string email, string path)
+        public async Task<IActionResult> ForgotPassword([FromBody] string email, string path)
         {
             var callbackUrl = Request.Headers["Origin"].FirstOrDefault();
             var user = await _userManager.FindByEmailAsync(email);

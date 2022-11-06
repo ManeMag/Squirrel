@@ -1,5 +1,4 @@
 using AutoMapper;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -7,19 +6,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Squirrel;
 using Squirrel.Contexts;
 using Squirrel.Entities;
 using Squirrel.Mapping;
 using Squirrel.Requests.Transaction;
 using Squirrel.Services;
-using Squirrel.Validators.Transaction;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
+
+// TODO: Carry this code to extension methods
 
 services.AddTransient<IEmailSender, EmailSender>();
 

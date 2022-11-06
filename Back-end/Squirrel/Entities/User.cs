@@ -8,7 +8,7 @@ namespace Squirrel.Entities
         public User() { }
 
         public User(string email) => UserName = Email = email;
-         
+
         public User(RegisterModel model) => UserName = Email = model.Email;
         public DateTime ExpirationDate { get; set; } = DateTime.MinValue;
         public string Currency { get; set; } = "$";

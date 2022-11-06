@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +55,7 @@ namespace Squirrel.Controllers
                     .ThenInclude(c => c.Transactions)
                     .Where(u => u.Id == GetUserId())
                     .FirstOrDefault();
-            }            
+            }
 
             return Ok(_mapper.Map<IEnumerable<CategoryViewModel>>(user.Categories));
         }
