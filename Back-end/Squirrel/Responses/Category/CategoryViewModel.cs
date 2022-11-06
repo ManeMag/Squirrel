@@ -1,4 +1,4 @@
-﻿using System.Transactions;
+﻿using Squirrel.Responses.Transaction;
 
 namespace Squirrel.Responses.Category
 {
@@ -6,5 +6,6 @@ namespace Squirrel.Responses.Category
         int Id,
         string Name,
         string Color,
-        IReadOnlyCollection<Transaction> Transactions);
+        IReadOnlyCollection<TransactionViewModel> Transactions,
+        bool IsBaseCategory);
 }

@@ -11,9 +11,9 @@ namespace Squirrel.Services
         private readonly ILogger<BaseCategoriesSeeder> _logger;
         private readonly IReadOnlyCollection<Category> _baseCategories = new List<Category>
         {
-            new Category {Name = "General", Color = "#000000"},
-            new Category {Name = "General2", Color = "#001220"},
-            new Category {Name = "General3", Color = "#FFFFFF"},
+            new Category {Name = "General", Color = "#000000", IsBaseCategory = true },
+            new Category {Name = "General2", Color = "#001220", IsBaseCategory = true },
+            new Category {Name = "General3", Color = "#FFFFFF", IsBaseCategory = true },
         };
 
         public BaseCategoriesSeeder(ApplicationContext context, ILogger<BaseCategoriesSeeder> logger)

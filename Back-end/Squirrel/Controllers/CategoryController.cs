@@ -11,26 +11,21 @@ using Squirrel.Services;
 
 namespace Squirrel.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public sealed class CategoryController : Controller
+    public sealed class CategoryController : AuthorizedControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ApplicationContext _context;
         private readonly BaseCategoriesSeeder _seeder;
-        private readonly UserManager<User> _userManager;
 
         public CategoryController(
             IMapper mapper,
             ApplicationContext context,
             BaseCategoriesSeeder seeder,
-            UserManager<User> userManager)
+            UserManager<User> userManager) : base(userManager)
         {
             _mapper = mapper;
             _context = context;
             _seeder = seeder;
-            _userManager = userManager;
         }
 
         [HttpGet]
@@ -140,7 +135,5 @@ namespace Squirrel.Controllers
                 ? Ok()
                 : NoContent();
         }
-
-        private string GetUserId() => _userManager.GetUserId(User);
     }
 }
