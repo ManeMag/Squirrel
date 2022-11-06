@@ -111,6 +111,36 @@ namespace Squirrel.Controllers
                 : NoContent();
         }
 
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<CategoryViewModel>> RemoveCategory(int id)
+        {
+            var user = _context.Users
+                .Include(u => u.Categories)
+                .Where(u => u.Id == GetUserId())
+                .FirstOrDefault();
+
+            if (user is null)
+            {
+                return BadRequest();
+            }
+
+            var category = user.Categories
+                .Where(c => c.Id == id)
+                .FirstOrDefault();
+
+            if (category.IsBaseCategory)
+            {
+                return BadRequest("You cannot delete base categories");
+            }
+
+            user.Categories.Remove(category);
+
+            return await _context.SaveChangesAsync() > 0
+                ? Ok()
+                : NoContent();
+        }
+
         private string GetUserId() => _userManager.GetUserId(User);
     }
 }
