@@ -1,4 +1,6 @@
 using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +12,9 @@ using Squirrel;
 using Squirrel.Contexts;
 using Squirrel.Entities;
 using Squirrel.Mapping;
+using Squirrel.Requests.Transaction;
 using Squirrel.Services;
+using Squirrel.Validators.Transaction;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +22,7 @@ var services = builder.Services;
 var configuration = builder.Configuration;
 
 services.AddTransient<IEmailSender, EmailSender>();
+
 services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -52,7 +57,12 @@ services.AddIdentity<User, IdentityRole>(options =>
 services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
 
 
-services.AddControllers();
+services
+    .AddControllers()
+    .AddFluentValidation(opt =>
+    {
+        opt.RegisterValidatorsFromAssemblyContaining<CreateTransactionRequest>();
+    });
 
 services.AddCors();
 services.ConfigureApplicationCookie(options =>
