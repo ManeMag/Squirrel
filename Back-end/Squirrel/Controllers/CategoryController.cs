@@ -77,9 +77,16 @@ namespace Squirrel.Controllers
             }
 
             user.Categories.Add(category);
-            return await _context.SaveChangesAsync() > 0
-                ? CreatedAtAction(nameof(CreateCategory), category.Id, category)
-                : BadRequest("Unable to create category");
+            var added = await _context.SaveChangesAsync() > 0;
+
+            if (!added)
+            {
+                return BadRequest("Unable to create category");
+            }
+
+            var categoryResponse = _mapper.Map<CategoryViewModel>(category);
+
+            return CreatedAtAction(nameof(CreateCategory), categoryResponse.Id, categoryResponse);
         }
 
         [HttpPatch]

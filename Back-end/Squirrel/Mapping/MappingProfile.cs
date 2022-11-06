@@ -23,6 +23,7 @@ namespace Squirrel.Mapping
             #region Transaction
 
             CreateMap<CreateTransactionRequest, Transaction>();
+            CreateMap<UpdateTransactionRequest, Transaction>();
 
             CreateMap<Transaction, TransactionViewModel>();
 
