@@ -3,27 +3,26 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Squirrel.Services;
+using Squirrel.Services.Repositories.Abstractions;
 
 namespace Squirrel.UnitTests.ServiceTests
 {
     public sealed class BaseCategorySeederTests
     {
         private readonly BaseCategorySeeder _baseCategorySeeder;
-        private readonly ApplicationContext _context;
+        private readonly IUnitOfWork _uow;
 
         public BaseCategorySeederTests()
         {
             var logger = Substitute.For<ILogger<BaseCategorySeeder>>();
-            _context = Substitute.For<ApplicationContext>();
+            _uow = Substitute.For<IUnitOfWork>();
 
-            _baseCategorySeeder = new BaseCategorySeeder(_context, logger);
+            _baseCategorySeeder = new BaseCategorySeeder(_uow, logger);
         }
 
         [Fact]
         public async Task SeedCategories_ShouldReturnOkWithTrue_WhenCategoriesSeededSuccessfully()
         {
-            _context.SaveChangesAsync().Returns(1);
-
             var seedingResult = await _baseCategorySeeder.SeedCategories(Guid.NewGuid().ToString());
 
             seedingResult.IsSuccess.Should().BeTrue();

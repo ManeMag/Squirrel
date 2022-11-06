@@ -14,9 +14,7 @@ namespace Squirrel.Validators.Transaction
         {
             // TODO: Union common validation logic into an abstract base validator
             RuleFor(t => t.Amount).InclusiveBetween(TransactionMinValue, TransactionMaxValue)
-                .WithMessage(string.Format("{PropertyName} should be inclusive between {0} and {1}",
-                TransactionMinValue,
-                TransactionMaxValue));
+                .WithMessage("{PropertyName} should be inclusive between -1 000 000 and 1 000 000");
 
             RuleFor(t => t.Time).Must(NotBeInFuture)
                 .WithMessage("{PropertyName} should not be in future");

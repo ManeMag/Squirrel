@@ -2,12 +2,13 @@
 using DataAccess.Entities;
 using FluentResults;
 using Microsoft.EntityFrameworkCore;
+using Squirrel.Services.Repositories.Abstractions;
 
 namespace Squirrel.Services
 {
     public sealed class BaseCategorySeeder
     {
-        private readonly ApplicationContext _context;
+        private readonly IUnitOfWork _uow;
         private readonly ILogger<BaseCategorySeeder> _logger;
         private readonly IReadOnlyCollection<Category> _baseCategories = new List<Category>
         {
@@ -16,9 +17,9 @@ namespace Squirrel.Services
             new Category {Name = "General3", Color = "#FFFFFF", IsBaseCategory = true },
         };
 
-        public BaseCategorySeeder(ApplicationContext context, ILogger<BaseCategorySeeder> logger)
+        public BaseCategorySeeder(IUnitOfWork uow, ILogger<BaseCategorySeeder> logger)
         {
-            _context = context;
+            _uow = uow;
             _logger = logger;
         }
 
@@ -26,16 +27,16 @@ namespace Squirrel.Services
         {
             try
             {
-                var user = await _context.Users
-                    .Where(u => u.Id == id)
-                    .Include(u => u.Categories)
-                    .FirstOrDefaultAsync();
+                var userResult = await _uow.UserRepository.GetUserWithCategoriesAsync(id);
 
-                user.Categories.AddRange(_baseCategories);
+                if (!userResult.IsSuccess)
+                {
+                    return Result.Fail(userResult.Errors);
+                }
 
-                return await _context.SaveChangesAsync() > 0
-                    ? Result.Ok(true)
-                    : Result.Ok(false);
+                _uow.CategoryRepository.AddRange(_baseCategories);
+
+                return Result.Ok(await _uow.Confirm());
             }
             catch (Exception ex)
             {
