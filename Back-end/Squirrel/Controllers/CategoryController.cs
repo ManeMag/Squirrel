@@ -2,29 +2,37 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Squirrel.Constants.Wording;
 using Squirrel.Contexts;
 using Squirrel.Entities;
+using Squirrel.Extensions;
 using Squirrel.Requests.Category;
 using Squirrel.Responses.Category;
 using Squirrel.Services;
 
 namespace Squirrel.Controllers
 {
+    using static Wording.Category;
+
     public sealed class CategoryController : AuthorizedControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ApplicationContext _context;
         private readonly BaseCategoriesSeeder _seeder;
+        private readonly IStringLocalizer _localizer;
 
         public CategoryController(
             IMapper mapper,
             ApplicationContext context,
             BaseCategoriesSeeder seeder,
+            IStringLocalizer localizer,
             UserManager<User> userManager) : base(userManager)
         {
             _mapper = mapper;
             _context = context;
             _seeder = seeder;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -80,7 +88,7 @@ namespace Squirrel.Controllers
 
             if (!added)
             {
-                return BadRequest("Unable to create category");
+                return BadRequest(CannotCreate.Using(_localizer));
             }
 
             var categoryResponse = _mapper.Map<CategoryViewModel>(category);
@@ -132,7 +140,7 @@ namespace Squirrel.Controllers
 
             if (category.IsBaseCategory)
             {
-                return BadRequest("You cannot delete base categories");
+                return BadRequest(DeletingBaseCategory.Using(_localizer));
             }
 
             user.Categories.Remove(category);

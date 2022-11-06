@@ -2,25 +2,33 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Squirrel.Constants.Wording;
 using Squirrel.Contexts;
 using Squirrel.Entities;
+using Squirrel.Extensions;
 using Squirrel.Requests.Transaction;
 using Squirrel.Responses.Transaction;
 
 namespace Squirrel.Controllers
 {
+    using static Wording.Transaction;
+    using static Wording.Category;
     public sealed class TransactionController : AuthorizedControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ApplicationContext _context;
+        private readonly IStringLocalizer _localizer;
 
         public TransactionController(
             IMapper mapper,
             ApplicationContext context,
+            IStringLocalizer localizer,
             UserManager<User> userManager) : base(userManager)
         {
             _mapper = mapper;
             _context = context;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -40,7 +48,7 @@ namespace Squirrel.Controllers
 
             if (!HasTransaction(transaction))
             {
-                return BadRequest("User has no such transaction");
+                return BadRequest(HasNoTransaction.Using(_localizer));
             }
 
             return _mapper.Map<TransactionViewModel>(transaction);
@@ -54,7 +62,7 @@ namespace Squirrel.Controllers
 
             if (category is null)
             {
-                return BadRequest("There are not such a category");
+                return BadRequest(NoSuchCategory.Using(_localizer));
             }
 
             var transaction = _mapper.Map<Transaction>(transactionRequest);
@@ -64,7 +72,7 @@ namespace Squirrel.Controllers
 
             if (!added)
             {
-                BadRequest("Unable to create such a transaction");
+                BadRequest(UnableToCreate.Using(_localizer));
             }
 
             var transactionResponse = _mapper.Map<TransactionViewModel>(transaction);
@@ -80,14 +88,14 @@ namespace Squirrel.Controllers
 
             if (category is null)
             {
-                return BadRequest("There are not such a category");
+                return BadRequest(NoSuchCategory.Using(_localizer));
             }
 
             var transaction = GetTransaction(transactionRequest.Id);
 
             if (transaction is null)
             {
-                return BadRequest("There are not such a transaction");
+                return BadRequest(HasNoTransaction.Using(_localizer));
             }
 
             _mapper.Map(transactionRequest, transaction);
@@ -96,7 +104,7 @@ namespace Squirrel.Controllers
 
             return await _context.SaveChangesAsync() > 0
                 ? Ok(_mapper.Map<TransactionViewModel>(transaction))
-                : BadRequest("Unable to update this transaction");
+                : BadRequest(UnableToUpdate.Using(_localizer));
         }
 
         [HttpDelete("{id:int}")]
@@ -106,7 +114,7 @@ namespace Squirrel.Controllers
 
             if (!HasTransaction(transaction))
             {
-                return BadRequest("User has no such transaction");
+                return BadRequest(HasNoTransaction.Using(_localizer));
             }
 
             _context.Transactions.Remove(transaction);
