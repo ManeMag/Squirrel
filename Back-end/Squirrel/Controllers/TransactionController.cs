@@ -23,6 +23,29 @@ namespace Squirrel.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TransactionViewModel>>> GetTransactions()
+        {
+            var user = GetUser();
+
+            var transactions = user.Categories.SelectMany(c => c.Transactions);
+
+            return Ok(_mapper.Map<IEnumerable<TransactionViewModel>>(transactions));
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<TransactionViewModel>> GetTransactionById(int id)
+        {
+            var transaction = GetTransaction(id);
+
+            if (!HasTransaction(transaction))
+            {
+                return BadRequest("User has no such transaction");
+            }
+
+            return _mapper.Map<TransactionViewModel>(transaction);
+        }
+
         [HttpPost]
         public async Task<ActionResult<TransactionViewModel>> CreateTransaction(
             [FromBody] CreateTransactionRequest transactionRequest)
@@ -76,19 +99,58 @@ namespace Squirrel.Controllers
                 : BadRequest("Unable to update this transaction");
         }
 
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> RemoveTransaction(int id)
+        {
+            var transaction = GetTransaction(id);
+
+            if (!HasTransaction(transaction))
+            {
+                return BadRequest("User has no such transaction");
+            }
+
+            _context.Transactions.Remove(transaction);
+
+            var removed = await _context.SaveChangesAsync() > 0;
+
+            return removed ? Ok() : NoContent();
+        }
+
+        private bool HasTransaction(Transaction transaction)
+        {
+            if (transaction is null)
+            {
+                return false;
+            }
+
+            var category = GetCategory(transaction.CategoryId);
+            var user = GetUser();
+
+            var userHasCategoryOfTransaction = user.Categories
+                .Where(c => c.Id == category.Id)
+                .Any();
+
+            return userHasCategoryOfTransaction;
+        }
+
         private Category GetCategory(int id)
         {
-            var user = _context.Users
-                .Include(u => u.Categories)
-                .ThenInclude(c => c.Transactions)
-                .Where(u => u.Id == GetUserId())
-                .FirstOrDefault();
+            var user = GetUser();
 
             var category = user.Categories
                 .Where(c => c.Id == id)
                 .FirstOrDefault();
 
             return category;
+        }
+
+        private User GetUser()
+        {
+            return _context.Users
+                .Include(u => u.Categories)
+                .ThenInclude(c => c.Transactions)
+                .Where(u => u.Id == GetUserId())
+                .FirstOrDefault();
         }
 
         private Transaction GetTransaction(int id) =>
