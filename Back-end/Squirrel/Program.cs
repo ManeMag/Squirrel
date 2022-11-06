@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Squirrel;
 using Squirrel.Contexts;
 using Squirrel.Entities;
+using Squirrel.Mapping;
 using Squirrel.Services;
 using System.Globalization;
 
@@ -16,6 +18,17 @@ var services = builder.Services;
 var configuration = builder.Configuration;
 
 services.AddTransient<IEmailSender, EmailSender>();
+services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+
+services.AddSingleton(mapperConfig.CreateMapper() as IMapper);
 
 services.AddAuthentication()
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
