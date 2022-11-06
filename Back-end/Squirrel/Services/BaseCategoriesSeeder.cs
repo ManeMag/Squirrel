@@ -34,7 +34,7 @@ namespace Squirrel.Services
                     return Result.Fail(userResult.Errors);
                 }
 
-                _uow.CategoryRepository.AddRange(_baseCategories);
+                userResult.Value.Categories.AddRange(_baseCategories);
 
                 return Result.Ok(await _uow.Confirm());
             }
