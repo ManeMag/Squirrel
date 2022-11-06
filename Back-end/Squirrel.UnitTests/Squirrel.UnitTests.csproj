@@ -32,8 +32,4 @@
     <ProjectReference Include="..\Squirrel\Squirrel.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Squirrel\" />
-  </ItemGroup>
-
 </Project>
