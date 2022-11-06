@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Squirrel.Constants.Wording;
-using Squirrel.Contexts;
-using Squirrel.Entities;
+using Squirrel.Data.Contexts;
+using Squirrel.Data.Entities;
 using Squirrel.Extensions;
 using Squirrel.Requests.Transaction;
 using Squirrel.Responses.Transaction;
@@ -18,12 +18,12 @@ namespace Squirrel.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ApplicationContext _context;
-        private readonly IStringLocalizer _localizer;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         public TransactionController(
             IMapper mapper,
             ApplicationContext context,
-            IStringLocalizer localizer,
+            IStringLocalizer<SharedResource> localizer,
             UserManager<User> userManager) : base(userManager)
         {
             _mapper = mapper;

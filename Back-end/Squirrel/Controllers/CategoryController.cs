@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Squirrel.Constants.Wording;
-using Squirrel.Contexts;
-using Squirrel.Entities;
+using Squirrel.Data.Contexts;
+using Squirrel.Data.Entities;
 using Squirrel.Extensions;
 using Squirrel.Requests.Category;
 using Squirrel.Responses.Category;
@@ -19,14 +19,14 @@ namespace Squirrel.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ApplicationContext _context;
-        private readonly BaseCategoriesSeeder _seeder;
-        private readonly IStringLocalizer _localizer;
+        private readonly BaseCategorySeeder _seeder;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         public CategoryController(
             IMapper mapper,
             ApplicationContext context,
-            BaseCategoriesSeeder seeder,
-            IStringLocalizer localizer,
+            BaseCategorySeeder seeder,
+            IStringLocalizer<SharedResource> localizer,
             UserManager<User> userManager) : base(userManager)
         {
             _mapper = mapper;

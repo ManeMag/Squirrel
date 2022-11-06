@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Squirrel.Contexts;
-using Squirrel.Entities;
+using Squirrel.Data.Contexts;
+using Squirrel.Data.Entities;
 using Squirrel.Mapping;
 using Squirrel.Requests.Transaction;
 using Squirrel.Services;
@@ -26,7 +26,7 @@ services.AddControllersWithViews()
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
-services.AddScoped<BaseCategoriesSeeder>();
+services.AddScoped<BaseCategorySeeder>();
 
 var mapperConfig = new MapperConfiguration(mc =>
 {
@@ -45,7 +45,15 @@ services.AddAuthentication()
         options.SignInScheme = IdentityConstants.ExternalScheme;
     }); ;
 
-services.AddDbContext<ApplicationContext>(options => options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+services.AddDbContext<ApplicationContext>(options =>
+{
+    options.UseSqlite(configuration.GetConnectionString("DefaultConnection"),
+        options =>
+        {
+            options.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName);
+        });
+});
+
 services.AddIdentity<User, IdentityRole>(options =>
 {
     options.Password.RequireNonAlphanumeric = false;

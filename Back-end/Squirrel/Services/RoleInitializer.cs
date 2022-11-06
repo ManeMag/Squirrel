@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Squirrel.Entities;
+using Squirrel.Data.Entities;
 
 namespace Squirrel.Services
 {

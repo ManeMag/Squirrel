@@ -1,10 +1,10 @@
-﻿namespace Squirrel.Entities
+﻿namespace Squirrel.Data.Entities
 {
-    public class Achievement
+    public class PiggyBank : UserRelatedModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public int Amount { get; set; }
         public double Goal { get; set; }
     }
 }

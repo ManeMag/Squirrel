@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Squirrel.Entities;
+using Squirrel.Data.Entities;
 
-namespace Squirrel.Contexts
+namespace Squirrel.Data.Contexts
 {
     public class ApplicationContext : IdentityDbContext<User>
     {

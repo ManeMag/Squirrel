@@ -1,10 +1,11 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using Squirrel.Entities;
+using Squirrel.Data.Entities;
 using Squirrel.Extensions;
 using Squirrel.Models;
 using Squirrel.Services;
@@ -21,7 +22,8 @@ namespace Squirrel.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly IEmailSender _emailSender;
-        private readonly BaseCategoriesSeeder _seeder;
+        private readonly BaseCategorySeeder _seeder;
+        private readonly IMapper _mapper;
 
         public AccountController(UserManager<User> userManager,
                                  SignInManager<User> signInManager,
@@ -29,13 +31,15 @@ namespace Squirrel.Controllers
                                  IEmailSender emailSender,
                                  RoleManager<IdentityRole> roleManager,
                                  IConfiguration configuration,
-                                 BaseCategoriesSeeder seeder)
+                                 BaseCategorySeeder seeder,
+                                 IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _localizer = localizer;
             _emailSender = emailSender;
             _seeder = seeder;
+            _mapper = mapper;
             _ = RoleInitializer.RoleInit(userManager, roleManager, configuration);
         }
 
@@ -52,7 +56,7 @@ namespace Squirrel.Controllers
         {
             if (model.Same)
             {
-                User user = new(model);
+                var user = _mapper.Map<User>(model);
                 try
                 {
                     var result = await _userManager.CreateAsync(user, model.Password);

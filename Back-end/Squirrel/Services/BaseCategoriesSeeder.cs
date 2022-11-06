@@ -1,14 +1,14 @@
 ﻿using FluentResults;
 using Microsoft.EntityFrameworkCore;
-using Squirrel.Contexts;
-using Squirrel.Entities;
+using Squirrel.Data.Contexts;
+using Squirrel.Data.Entities;
 
 namespace Squirrel.Services
 {
-    public sealed class BaseCategoriesSeeder
+    public sealed class BaseCategorySeeder
     {
         private readonly ApplicationContext _context;
-        private readonly ILogger<BaseCategoriesSeeder> _logger;
+        private readonly ILogger<BaseCategorySeeder> _logger;
         private readonly IReadOnlyCollection<Category> _baseCategories = new List<Category>
         {
             new Category {Name = "General", Color = "#000000", IsBaseCategory = true },
@@ -16,7 +16,7 @@ namespace Squirrel.Services
             new Category {Name = "General3", Color = "#FFFFFF", IsBaseCategory = true },
         };
 
-        public BaseCategoriesSeeder(ApplicationContext context, ILogger<BaseCategoriesSeeder> logger)
+        public BaseCategorySeeder(ApplicationContext context, ILogger<BaseCategorySeeder> logger)
         {
             _context = context;
             _logger = logger;

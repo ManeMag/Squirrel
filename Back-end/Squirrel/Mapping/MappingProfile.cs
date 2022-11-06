@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Squirrel.Entities;
+using Squirrel.Data.Entities;
+using Squirrel.Models;
 using Squirrel.Requests.Category;
 using Squirrel.Requests.Transaction;
 using Squirrel.Responses.Category;
@@ -11,6 +12,13 @@ namespace Squirrel.Mapping
     {
         public MappingProfile()
         {
+            #region User
+
+            CreateMap<RegisterModel, User>()
+                .ForMember(u => u.UserName, opt => opt.MapFrom(src => src.Email));
+
+            #endregion
+
             #region Category
 
             CreateMap<CreateCategoryRequest, Category>();
