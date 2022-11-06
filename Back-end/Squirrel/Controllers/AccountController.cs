@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Squirrel.Extensions;
-using Squirrel.Models;
+using Squirrel.Requests.User;
 using Squirrel.Services;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -45,14 +45,14 @@ namespace Squirrel.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AuthenticateAsync(LoginModel model)
+        public async Task<IActionResult> AuthenticateAsync(LoginRequest model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
             return result.Succeeded ? Ok() : "Invalid login and/or password".ToBadRequestUsing(_localizer);
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterAsync(RegisterModel model, string callbackUrl)
+        public async Task<IActionResult> RegisterAsync(RegisterRequest model, string callbackUrl)
         {
             if (model.Same)
             {
@@ -146,7 +146,7 @@ namespace Squirrel.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordModel model)
+        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequest model)
         {
             var callbackUrl = Request.Headers["Origin"].FirstOrDefault();
             if (model.Same)

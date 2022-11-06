@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DataAccess.Entities;
-using Squirrel.Models;
 using Squirrel.Requests.Category;
 using Squirrel.Requests.Transaction;
+using Squirrel.Requests.User;
 using Squirrel.Responses.Category;
 using Squirrel.Responses.Transaction;
 
@@ -14,7 +14,7 @@ namespace Squirrel.Mapping
         {
             #region User
 
-            CreateMap<RegisterModel, User>()
+            CreateMap<RegisterRequest, User>()
                 .ForMember(u => u.UserName, opt => opt.MapFrom(src => src.Email));
 
             #endregion

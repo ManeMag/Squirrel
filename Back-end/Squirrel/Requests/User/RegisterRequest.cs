@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Squirrel.Models
+namespace Squirrel.Requests.User
 {
-    public class RegisterModel
+    public class RegisterRequest
     {
         [DataType(DataType.EmailAddress)]
         [Required]
