@@ -12,6 +12,7 @@ namespace Squirrel.Mapping
             #region Category
 
             CreateMap<CreateCategoryRequest, Category>();
+            CreateMap<UpdateCategoryRequest, Category>();
 
             CreateMap<Category, CategoryViewModel>();
 

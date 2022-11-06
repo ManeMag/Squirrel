@@ -87,6 +87,30 @@ namespace Squirrel.Controllers
                 : BadRequest("Unable to create category");
         }
 
+        [HttpPatch]
+        public async Task<ActionResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequest categoryRequest)
+        {
+            var user = _context.Users
+                .Include(u => u.Categories)
+                .Where(u => u.Id == GetUserId())
+                .FirstOrDefault();
+
+            if (user is null)
+            {
+                return BadRequest();
+            }
+
+            var category = user.Categories
+                .Where(c => c.Id == categoryRequest.Id)
+                .FirstOrDefault();
+
+            _mapper.Map<UpdateCategoryRequest, Category>(categoryRequest, category);
+
+            return await _context.SaveChangesAsync() > 0
+                ? Ok(_mapper.Map<CategoryViewModel>(category))
+                : NoContent();
+        }
+
         private string GetUserId() => _userManager.GetUserId(User);
     }
 }
