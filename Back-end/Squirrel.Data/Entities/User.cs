@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Squirrel.Data.Entities
+namespace DataAccess.Entities
 {
     public class User : IdentityUser
     {

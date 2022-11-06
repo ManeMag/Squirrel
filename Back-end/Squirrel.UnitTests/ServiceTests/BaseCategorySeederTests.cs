@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
+﻿using DataAccess.Contexts;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using Squirrel.Data.Contexts;
 using Squirrel.Services;
 
 namespace Squirrel.UnitTests.ServiceTests

@@ -1,7 +1,7 @@
-﻿using FluentResults;
+﻿using DataAccess.Contexts;
+using DataAccess.Entities;
+using FluentResults;
 using Microsoft.EntityFrameworkCore;
-using Squirrel.Data.Contexts;
-using Squirrel.Data.Entities;
 
 namespace Squirrel.Services
 {

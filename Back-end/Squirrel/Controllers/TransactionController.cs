@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
+using DataAccess.Contexts;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Squirrel.Constants.Wording;
-using Squirrel.Data.Contexts;
-using Squirrel.Data.Entities;
 using Squirrel.Extensions;
 using Squirrel.Requests.Transaction;
 using Squirrel.Responses.Transaction;

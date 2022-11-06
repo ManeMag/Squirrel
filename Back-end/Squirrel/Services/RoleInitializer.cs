@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Squirrel.Data.Entities;
+﻿using DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Squirrel.Services
 {

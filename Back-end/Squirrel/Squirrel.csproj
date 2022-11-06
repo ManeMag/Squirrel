@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Squirrel.Data\Squirrel.Data.csproj" />
+    <ProjectReference Include="..\Squirrel.Data\DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

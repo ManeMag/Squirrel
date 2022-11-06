@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using DataAccess.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Squirrel.Data.Entities;
 
-namespace Squirrel.Data.Contexts
+namespace DataAccess.Contexts
 {
     public class ApplicationContext : IdentityDbContext<User>
     {

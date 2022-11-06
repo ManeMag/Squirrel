@@ -1,4 +1,4 @@
-﻿namespace Squirrel.Data.Entities
+﻿namespace DataAccess.Entities
 {
     public class UserRelatedModel
     {

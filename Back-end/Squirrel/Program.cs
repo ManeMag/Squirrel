@@ -1,4 +1,6 @@
 using AutoMapper;
+using DataAccess.Contexts;
+using DataAccess.Entities;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -6,8 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Squirrel.Data.Contexts;
-using Squirrel.Data.Entities;
 using Squirrel.Mapping;
 using Squirrel.Requests.Transaction;
 using Squirrel.Services;

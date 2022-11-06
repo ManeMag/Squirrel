@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Squirrel.Migrations
+namespace DataAccess.Migrations
 {
     public partial class InitialMigration : Migration
     {

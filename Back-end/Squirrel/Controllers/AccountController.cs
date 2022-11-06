@@ -1,11 +1,11 @@
 using AutoMapper;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using Squirrel.Data.Entities;
 using Squirrel.Extensions;
 using Squirrel.Models;
 using Squirrel.Services;

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Squirrel.Data.Entities;
+using DataAccess.Entities;
 using Squirrel.Models;
 using Squirrel.Requests.Category;
 using Squirrel.Requests.Transaction;
