@@ -8,13 +8,13 @@ namespace Squirrel.Services
 {
     public sealed class BaseCategorySeeder
     {
+        private const string MainPresentationColor = "#FF9B3F";
+
         private readonly IUnitOfWork _uow;
         private readonly ILogger<BaseCategorySeeder> _logger;
         private readonly IReadOnlyCollection<Category> _baseCategories = new List<Category>
         {
-            new Category {Name = "General", Color = "#000000", IsBaseCategory = true },
-            new Category {Name = "General2", Color = "#001220", IsBaseCategory = true },
-            new Category {Name = "General3", Color = "#FFFFFF", IsBaseCategory = true },
+            new Category { Name = "Other", Color = MainPresentationColor, IsBaseCategory = true },
         };
 
         public BaseCategorySeeder(IUnitOfWork uow, ILogger<BaseCategorySeeder> logger)
