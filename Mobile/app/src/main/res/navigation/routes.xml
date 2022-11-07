@@ -8,21 +8,21 @@
     <fragment
         android:id="@+id/nav_fragment_piggy_bank"
         android:name="com.example.squirrel.fragment_piggy_bank"
-        android:label="fragment_piggy_bank"
+        android:label="@string/title_piggy_bank"
         tools:layout="@layout/fragment_piggy_bank" >
 
     </fragment>
     <fragment
         android:id="@+id/nav_fragment_statistics"
         android:name="com.example.squirrel.fragment_statistics"
-        android:label="fragment_statistics"
+        android:label="@string/title_statistics"
         tools:layout="@layout/fragment_statistics" >
 
     </fragment>
     <fragment
         android:id="@+id/nav_fragment_transaction"
         android:name="com.example.squirrel.Transaction"
-        android:label="fragment_transaction"
+        android:label="@string/title_transactions"
         tools:layout="@layout/fragment_transaction" >
 
     </fragment>

@@ -3,17 +3,17 @@
 
     <item
         android:id="@+id/nav_fragment_transaction"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/icon_transactions"
         android:title="@string/title_transactions" />
 
     <item
         android:id="@+id/nav_fragment_statistics"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_statistics_toolbar" />
+        android:icon="@drawable/icon_statistics"
+        android:title="@string/title_statistics" />
 
     <item
         android:id="@+id/nav_fragment_piggy_bank"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/icon_piggybank"
         android:title="@string/title_piggy_bank" />
 
 </menu>

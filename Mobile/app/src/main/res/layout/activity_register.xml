@@ -143,7 +143,6 @@
             android:textStyle="bold"
             android:text="@string/privacy_policy_attention"
             android:textSize="@dimen/text_privacy_policy_size"
-            android:layout_marginHorizontal="@dimen/vertical_margin_medium"
             android:textColor="@color/gray_text"
             />
     </LinearLayout>

@@ -3,7 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="title_statistics_toolbar">Статистика</string>
+    <string name="title_statistics">Статистика</string>
     <string name="title_register_">Реєстрація</string>
     <string name="title_authorization">Авторизація</string>
     <string name="hint_prompt_login">Введіть ваш логін</string>
