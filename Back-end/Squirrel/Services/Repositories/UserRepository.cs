@@ -28,5 +28,21 @@ namespace Squirrel.Services.Repositories
 
             return Result.Ok(user);
         }
+
+        public async Task<Result<User>> GetUserWithTransactionsAsync(string id)
+        {
+            var user = await _context.Users
+                    .Where(u => u.Id == id)
+                    .Include(u => u.Categories)
+                    .ThenInclude(c => c.Transactions)
+                    .FirstOrDefaultAsync();
+
+            if (user is null)
+            {
+                return Result.Fail("User has not been found");
+            }
+
+            return Result.Ok(user);
+        }
     }
 }
