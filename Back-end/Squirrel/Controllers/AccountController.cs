@@ -1,13 +1,13 @@
+using AutoMapper;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using Squirrel.Contexts;
-using Squirrel.Entities;
 using Squirrel.Extensions;
-using Squirrel.Models;
+using Squirrel.Requests.User;
 using Squirrel.Services;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -18,50 +18,64 @@ namespace Squirrel.Controllers
     [Route("api/[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly UserManager<User>                  _userManager;
-        private readonly SignInManager<User>                _signInManager;
-        private readonly IStringLocalizer<SharedResource>   _localizer;
-        private readonly IEmailSender                       _emailSender;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly IEmailSender _emailSender;
+        private readonly BaseCategorySeeder _seeder;
+        private readonly IMapper _mapper;
+
         public AccountController(UserManager<User> userManager,
                                  SignInManager<User> signInManager,
                                  IStringLocalizer<SharedResource> localizer,
                                  IEmailSender emailSender,
                                  RoleManager<IdentityRole> roleManager,
-                                 IConfiguration configuration)
+                                 IConfiguration configuration,
+                                 BaseCategorySeeder seeder,
+                                 IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _localizer = localizer;
             _emailSender = emailSender;
+            _seeder = seeder;
+            _mapper = mapper;
             _ = RoleInitializer.RoleInit(userManager, roleManager, configuration);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> AuthenticateAsync(LoginModel model)
+        public async Task<IActionResult> AuthenticateAsync(LoginRequest model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
             return result.Succeeded ? Ok() : "Invalid login and/or password".ToBadRequestUsing(_localizer);
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterAsync(RegisterModel model, string callbackUrl)
+        public async Task<IActionResult> RegisterAsync(RegisterRequest model, string callbackUrl)
         {
             if (model.Same)
             {
-                User user = new(model);
+                var user = _mapper.Map<User>(model);
                 try
                 {
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
+                        var seedingResult = await _seeder.SeedCategories(user.Id);
+
+                        if (!seedingResult.IsSuccess)
+                        {
+                            return BadRequest(seedingResult.Errors);
+                        }
+
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         callbackUrl = Url.ActionLink("ConfirmEmail", "Account", new { user.Id, code, callbackUrl });
                         await _emailSender.SendEmailAsync(email: model.Email,
                                                          subject: _localizer["Confirm your email"].Value,
                                                          htmlMessage: _localizer["Please confirm your account by <a href='{0}'>clicking here</a>.", HtmlEncoder.Default.Encode(callbackUrl!)].Value);
 
-                        return Ok();
+                        return CreatedAtAction(nameof(RegisterAsync), user);
                     }
                     return BadRequest(result.Errors.Select(e => e.Description));
                 }
@@ -112,9 +126,9 @@ namespace Squirrel.Controllers
             var result = await _userManager.DeleteAsync(user);
             return result.Succeeded ? Ok() : BadRequest(result.Errors.Select(e => e.Description));
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword([FromBody]string email, string path)
+        public async Task<IActionResult> ForgotPassword([FromBody] string email, string path)
         {
             var callbackUrl = Request.Headers["Origin"].FirstOrDefault();
             var user = await _userManager.FindByEmailAsync(email);
@@ -132,7 +146,7 @@ namespace Squirrel.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordModel model)
+        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequest model)
         {
             var callbackUrl = Request.Headers["Origin"].FirstOrDefault();
             if (model.Same)
