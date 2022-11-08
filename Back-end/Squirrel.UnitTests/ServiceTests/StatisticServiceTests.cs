@@ -32,8 +32,8 @@ namespace Squirrel.UnitTests.ServiceTests
         public async Task GetStatisticsForPeriod_ShouldReturnFail_WhenStartDateGreaterThanEndDate()
         {
             var statisticsResult = await _statisticService
-                .GetStatisticsForPeriod(Guid.NewGuid().ToString(), 
-                DateTime.UtcNow, 
+                .GetStatisticsForPeriod(Guid.NewGuid().ToString(),
+                DateTime.UtcNow,
                 DateTime.UtcNow - TimeSpan.FromDays(30));
 
             statisticsResult.IsSuccess.Should().BeFalse();
@@ -44,8 +44,8 @@ namespace Squirrel.UnitTests.ServiceTests
         {
             var statisticsResult = await _statisticService
                 .GetStatisticsForPeriod(
-                Guid.NewGuid().ToString(), 
-                DateTime.UtcNow, 
+                Guid.NewGuid().ToString(),
+                DateTime.UtcNow,
                 DateTime.UtcNow + TimeSpan.FromDays(30));
 
             statisticsResult.IsSuccess.Should().BeFalse();
@@ -60,8 +60,8 @@ namespace Squirrel.UnitTests.ServiceTests
 
             var statisticsResult = await _statisticService
                 .GetStatisticsForPeriod(
-                Guid.NewGuid().ToString(), 
-                DateTime.UtcNow - TimeSpan.FromDays(30), 
+                Guid.NewGuid().ToString(),
+                DateTime.UtcNow - TimeSpan.FromDays(30),
                 DateTime.UtcNow);
 
             statisticsResult.IsSuccess.Should().BeFalse();

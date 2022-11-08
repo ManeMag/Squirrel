@@ -1,5 +1,4 @@
-﻿using DataAccess.Contexts;
-using DataAccess.Entities;
+﻿using DataAccess.Entities;
 using FluentAssertions;
 using FluentResults;
 using Microsoft.Extensions.Logging;
@@ -40,7 +39,7 @@ namespace Squirrel.UnitTests.ServiceTests
         public async Task SeedCategories_ShouldReturnOkAndTrue_WhenChangesAdded()
         {
             _userRepository.GetUserWithCategoriesAsync(Arg.Any<string>())
-                .Returns(Result.Ok(new User { Categories = new()}));
+                .Returns(Result.Ok(new User { Categories = new() }));
             _uow.Confirm().Returns(true);
 
             var seedingResult = await _baseCategorySeeder.SeedCategories(Guid.NewGuid().ToString());

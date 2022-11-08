@@ -39,7 +39,7 @@ namespace Squirrel.Services
             string userId, DateTime startDate, DateTime endDate)
         {
             var validationResult = DatesAreValid(startDate, endDate);
-            
+
             if (validationResult.IsFailed)
             {
                 return Result.Fail(validationResult.Errors);

@@ -8,7 +8,7 @@ namespace Squirrel.Services
         private readonly ApplicationContext _context;
 
         public UnitOfWork(
-            ApplicationContext context, 
+            ApplicationContext context,
             ICategoryRepository categoryRepository,
             IUserRepository userRepository)
         {
