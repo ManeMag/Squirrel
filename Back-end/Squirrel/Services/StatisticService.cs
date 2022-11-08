@@ -27,9 +27,24 @@ namespace Squirrel.Services
 
         private DateTime HalfYearAgo => DateTime.UtcNow - TimeSpan.FromDays(180);
 
+        private Result DatesAreValid(DateTime startDate, DateTime endDate)
+        {
+            if (startDate > endDate) return Result.Fail("Start date cannot be greater than end date");
+            if (endDate > UtcNow) return Result.Fail("End date cannot be in future");
+
+            return Result.Ok();
+        }
+
         public async Task<Result<StatisticsViewModel>> GetStatisticsForPeriod(
             string userId, DateTime startDate, DateTime endDate)
         {
+            var validationResult = DatesAreValid(startDate, endDate);
+            
+            if (validationResult.IsFailed)
+            {
+                return Result.Fail(validationResult.Errors);
+            }
+
             var transactionsResult = await GetTransactionsForPeriod(userId, startDate, endDate);
 
             if (transactionsResult.IsFailed)
@@ -63,7 +78,7 @@ namespace Squirrel.Services
             {
                 var categoryId = transaction.Key;
                 var transactionsSum = transaction.Sum(x => x.Amount);
-                var percentage = (decimal)Math.Round(transactionsSum / total);
+                var percentage = Math.Round((decimal)transactionsSum / (decimal)total, 2) * 100;
                 var count = transaction.Count();
 
                 yield return new TransactionImpact(categoryId, percentage, transactionsSum, count);
