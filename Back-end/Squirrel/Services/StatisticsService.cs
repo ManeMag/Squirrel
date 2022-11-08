@@ -2,12 +2,13 @@
 using FluentResults;
 using Squirrel.Responses.Statistics;
 using Squirrel.Responses.Transaction;
+using Squirrel.Services.Abstractions;
 using Squirrel.Services.Repositories.Abstractions;
 using static Squirrel.Responses.Statistics.StatisticsViewModel;
 
 namespace Squirrel.Services
 {
-    public sealed class StatisticsService
+    public sealed class StatisticsService : IStatisticsService
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
@@ -19,6 +20,12 @@ namespace Squirrel.Services
             _uow = uow;
             _mapper = mapper;
         }
+
+        private DateTime UtcNow => DateTime.UtcNow;
+
+        private DateTime MonthAgo => DateTime.UtcNow - TimeSpan.FromDays(30);
+
+        private DateTime HalfYearAgo => DateTime.UtcNow - TimeSpan.FromDays(180);
 
         public async Task<Result<StatisticsViewModel>> GetStatisticsForPeriod(
             string userId, DateTime startDate, DateTime endDate)
@@ -37,6 +44,12 @@ namespace Squirrel.Services
                 Impact = CalculateImpact(transactionsResult.Value)
             });
         }
+
+        public async Task<Result<StatisticsViewModel>> GetStatisticsForMonth(string userId) =>
+            await GetStatisticsForPeriod(userId, MonthAgo, UtcNow);
+
+        public async Task<Result<StatisticsViewModel>> GetStatisticsForHalfYear(string userId) =>
+            await GetStatisticsForPeriod(userId, HalfYearAgo, UtcNow);
 
         private IEnumerable<TransactionImpact> CalculateImpact(IEnumerable<TransactionViewModel> transactions)
         {
@@ -74,11 +87,5 @@ namespace Squirrel.Services
 
             return Result.Ok(_mapper.Map<IEnumerable<TransactionViewModel>>(transactions));
         }
-
-        private async Task<Result<IEnumerable<TransactionViewModel>>> GetTransactionsForLastMonth(string userId) =>
-            await GetTransactionsForPeriod(userId, DateTime.UtcNow - TimeSpan.FromDays(30), DateTime.UtcNow);
-
-        private async Task<Result<IEnumerable<TransactionViewModel>>> GetTransactionsForHalfYear(string userId) =>
-            await GetTransactionsForPeriod(userId, DateTime.UtcNow - TimeSpan.FromDays(180), DateTime.UtcNow);
     }
 }
