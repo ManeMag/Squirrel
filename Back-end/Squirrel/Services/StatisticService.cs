@@ -8,12 +8,12 @@ using static Squirrel.Responses.Statistics.StatisticsViewModel;
 
 namespace Squirrel.Services
 {
-    public sealed class StatisticsService : IStatisticsService
+    public sealed class StatisticService : IStatisticService
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
-        public StatisticsService(
+        public StatisticService(
             IUnitOfWork uow,
             IMapper mapper)
         {

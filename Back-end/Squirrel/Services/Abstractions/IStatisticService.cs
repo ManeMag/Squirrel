@@ -3,7 +3,7 @@ using Squirrel.Responses.Statistics;
 
 namespace Squirrel.Services.Abstractions
 {
-    public interface IStatisticsService
+    public interface IStatisticService
     {
         Task<Result<StatisticsViewModel>> GetStatisticsForHalfYear(string userId);
         Task<Result<StatisticsViewModel>> GetStatisticsForMonth(string userId);
