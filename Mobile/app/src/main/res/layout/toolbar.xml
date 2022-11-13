@@ -16,6 +16,7 @@
     app:contentInsetEnd="0dp"
     app:titleMarginStart="60dp"
     app:titleTextColor="@color/white_text">
+
 <!--    <TextView-->
 <!--        android:id="@+id/toolbar_title"-->
 <!--        android:layout_width="match_parent"-->
