@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/main_background">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/auth_header_oval"
+        android:gravity="center|center"
+        android:layout_gravity="top"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/google_auth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/squirellnew_1"
+            android:contentDescription="Squirell"
+            tools:ignore="ImageContrastCheck" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_small"
+            android:text="@string/title_register_"
+            style="@style/text_title_style"
+            tools:ignore="TextContrastCheck" />
+    </LinearLayout>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/vertical_margin_medium"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/google_auth"
+            tools:ignore="ImageContrastCheck"
+            android:contentDescription="Google authorization"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/vertical_margin_medium"
+            android:gravity="center">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:background="@android:color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reg_auth_or"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText"
+                android:textSize="18sp"
+                android:layout_weight="0"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="40dp"
+                android:background="@android:color/black"/>
+
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/loginPrompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_medium"
+            android:inputType="textEmailAddress"
+            android:hint="@string/hint_prompt_login"
+            style="@style/edit_prompt"/>
+
+        <EditText
+            android:id="@+id/passwordPrompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_medium"
+            android:inputType="textPassword"
+            android:hint="@string/hint_prompt_password"
+            style="@style/edit_prompt"/>
+
+        <EditText
+            android:id="@+id/confirmPasswordPrompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_medium"
+            android:inputType="textPassword"
+            android:hint="@string/hint_prompt_confirm_password"
+            style="@style/edit_prompt"/>
+
+        <TextView
+            android:id="@+id/enterButton"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_medium"
+            android:background="@drawable/button"
+            android:minWidth="230dp"
+            android:minHeight="48dp"
+            android:onClick="onClickSignOn"
+            android:text="@string/button_register_text" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_marginVertical="@dimen/vertical_margin_medium">
+
+        <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/vertical_margin_medium"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:text="@string/privacy_policy_attention"
+            android:textSize="@dimen/text_privacy_policy_size"
+            android:textColor="@color/gray_text"
+            />
+    </LinearLayout>
+
+</RelativeLayout>
+
+
+
+
+</LinearLayout>
