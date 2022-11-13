@@ -1,21 +1,45 @@
+using AutoMapper;
+using DataAccess.Contexts;
+using DataAccess.Entities;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Squirrel;
-using Squirrel.Contexts;
-using Squirrel.Entities;
+using Squirrel.Mapping;
+using Squirrel.Requests.Transaction;
 using Squirrel.Services;
+using Squirrel.Services.Repositories;
+using Squirrel.Services.Repositories.Abstractions;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
+// TODO: Carry this code to extension methods
+
 services.AddTransient<IEmailSender, EmailSender>();
+
+services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
+services.AddScoped<BaseCategorySeeder>();
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+
+services.AddSingleton(mapperConfig.CreateMapper() as IMapper);
+
+services.AddScoped<ICategoryRepository, CategoryRepository>();
+services.AddScoped<IUserRepository, UserRepository>();
+services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 services.AddAuthentication()
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -27,7 +51,15 @@ services.AddAuthentication()
         options.SignInScheme = IdentityConstants.ExternalScheme;
     }); ;
 
-services.AddDbContext<ApplicationContext>(options => options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+services.AddDbContext<ApplicationContext>(options =>
+{
+    options.UseSqlite(configuration.GetConnectionString("DefaultConnection"),
+        options =>
+        {
+            options.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName);
+        });
+});
+
 services.AddIdentity<User, IdentityRole>(options =>
 {
     options.Password.RequireNonAlphanumeric = false;
@@ -37,7 +69,12 @@ services.AddIdentity<User, IdentityRole>(options =>
 services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
 
 
-services.AddControllers();
+services
+    .AddControllers()
+    .AddFluentValidation(opt =>
+    {
+        opt.RegisterValidatorsFromAssemblyContaining<CreateTransactionRequest>();
+    });
 
 services.AddCors();
 services.ConfigureApplicationCookie(options =>
