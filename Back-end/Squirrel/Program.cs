@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Squirrel.Mapping;
 using Squirrel.Requests.Transaction;
 using Squirrel.Services;
+using Squirrel.Services.Abstractions;
 using Squirrel.Services.Repositories;
 using Squirrel.Services.Repositories.Abstractions;
 using System.Globalization;
@@ -40,6 +41,7 @@ services.AddSingleton(mapperConfig.CreateMapper() as IMapper);
 services.AddScoped<ICategoryRepository, CategoryRepository>();
 services.AddScoped<IUserRepository, UserRepository>();
 services.AddScoped<IUnitOfWork, UnitOfWork>();
+services.AddScoped<IStatisticService, StatisticService>();
 
 services.AddAuthentication()
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)

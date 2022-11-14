@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Squirrel", "Squirrel\Squirr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Squirrel.UnitTests", "Squirrel.UnitTests\Squirrel.UnitTests.csproj", "{4B8BA1DF-81DF-4620-8A3F-7BFBBFF1B966}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "Squirrel.Data\DataAccess.csproj", "{3A039007-8CB6-4884-B4DE-0956CAA5B01C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{439279AD-81E9-40E7-96B1-0BDC5C3669B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{4B8BA1DF-81DF-4620-8A3F-7BFBBFF1B966}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B8BA1DF-81DF-4620-8A3F-7BFBBFF1B966}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B8BA1DF-81DF-4620-8A3F-7BFBBFF1B966}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3A039007-8CB6-4884-B4DE-0956CAA5B01C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3A039007-8CB6-4884-B4DE-0956CAA5B01C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3A039007-8CB6-4884-B4DE-0956CAA5B01C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3A039007-8CB6-4884-B4DE-0956CAA5B01C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{439279AD-81E9-40E7-96B1-0BDC5C3669B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{439279AD-81E9-40E7-96B1-0BDC5C3669B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{439279AD-81E9-40E7-96B1-0BDC5C3669B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{439279AD-81E9-40E7-96B1-0BDC5C3669B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

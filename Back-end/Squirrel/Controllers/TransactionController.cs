@@ -12,8 +12,8 @@ using Squirrel.Responses.Transaction;
 
 namespace Squirrel.Controllers
 {
-    using static Wording.Transaction;
     using static Wording.Category;
+    using static Wording.Transaction;
     public sealed class TransactionController : AuthorizedControllerBase
     {
         private readonly IMapper _mapper;

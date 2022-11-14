@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Squirrel.Data\DataAccess.csproj" />
     <ProjectReference Include="..\Squirrel\Squirrel.csproj" />
   </ItemGroup>
 
