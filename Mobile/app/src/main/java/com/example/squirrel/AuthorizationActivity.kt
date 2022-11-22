@@ -28,7 +28,7 @@ class AuthorizationActivity : AppCompatActivity()  {
         val intent = Intent(this, MainActivity::class.java)
 
         lifecycleScope.launch{
-            val response: HttpResponse = client.get("$protocol://$domain:$port/api/account/name")
+            val response: HttpResponse = client.get("$protocol://$domain:$port/api/account/email")
             if(response.status == HttpStatusCode.OK)
                 startActivity(intent)
             else {
@@ -49,7 +49,7 @@ class AuthorizationActivity : AppCompatActivity()  {
         val context = this
         lifecycleScope.launch{
             val response: HttpResponse = client.submitForm(
-                url = "$protocol://$domain:$port/api/account/login",
+                url = "$protocol://$domain:$port/api/account/authenticate",
                 formParameters = Parameters.build {
                     append("email", binding.loginPrompt.text.toString())
                     append("password", binding.passwordPrompt.text.toString())
