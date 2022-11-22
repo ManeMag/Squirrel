@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
+using Microsoft.Extensions.Localization;
+using Squirrel.Extensions;
 using Squirrel.Responses.Statistics;
 using Squirrel.Responses.Transaction;
 using Squirrel.Services.Abstractions;
@@ -12,13 +14,16 @@ namespace Squirrel.Services
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         public StatisticService(
             IUnitOfWork uow,
-            IMapper mapper)
+            IMapper mapper,
+            IStringLocalizer<SharedResource> localizer)
         {
             _uow = uow;
             _mapper = mapper;
+            _localizer = localizer;
         }
 
         private DateTime UtcNow => DateTime.UtcNow;
@@ -29,8 +34,8 @@ namespace Squirrel.Services
 
         private Result DatesAreValid(DateTime startDate, DateTime endDate)
         {
-            if (startDate > endDate) return Result.Fail("Start date cannot be greater than end date");
-            if (endDate > UtcNow) return Result.Fail("End date cannot be in future");
+            if (startDate > endDate) return Result.Fail("Start date cannot be greater than end date".Using(_localizer));
+            if (endDate > UtcNow) return Result.Fail("End date cannot be in future".Using(_localizer));
 
             return Result.Ok();
         }
@@ -92,7 +97,7 @@ namespace Squirrel.Services
 
             if (userResult.IsFailed)
             {
-                return Result.Fail("User not found");
+                return Result.Fail("User not found".Using(_localizer));
             }
 
             var transactions = userResult.Value.Categories
