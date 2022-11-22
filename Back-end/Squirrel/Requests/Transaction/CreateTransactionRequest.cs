@@ -1,4 +1,16 @@
-﻿namespace Squirrel.Requests.Transaction
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Squirrel.Requests.Transaction
 {
-    public record CreateTransactionRequest(double Amount, string Description, int CategoryId, DateTime Time);
+    public class CreateTransactionRequest
+    {
+        [Required]
+        public double Amount { get; set; }
+        [Required]
+        public string Description { get; set; }
+        [Required]
+        public int CategoryId { get; set; }
+        [Required]
+        public DateTime Time { get; set; }
+    }
 }

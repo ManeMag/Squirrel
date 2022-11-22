@@ -57,7 +57,6 @@ class RegisterActivity : AppCompatActivity() {
                         Toast.makeText(context, x, Toast.LENGTH_SHORT).show()
                 }
                 catch (e: Exception) {
-                    Log.e("e", e.toString())
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
                 }
             }
