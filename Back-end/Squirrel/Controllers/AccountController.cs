@@ -54,7 +54,7 @@ namespace Squirrel.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterAsync([FromForm] RegisterRequest model, string callbackUrl)
         {
-            if (model.Same)
+            if (model.Same())
             {
                 var user = _mapper.Map<User>(model);
                 try
@@ -70,14 +70,19 @@ namespace Squirrel.Controllers
                         }
 
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        callbackUrl = Url.ActionLink("ConfirmEmail", "Account", new { user.Id, code, callbackUrl });
+                        callbackUrl = Url.ActionLink("ConfirmEmail", "Account", new { user.Id, code, callbackUrl })!;
                         await _emailSender.SendEmailAsync(email: model.Email,
                                                          subject: _localizer["Confirm your email"].Value,
                                                          htmlMessage: _localizer["Please confirm your account by <a href='{0}'>clicking here</a>.", HtmlEncoder.Default.Encode(callbackUrl!)].Value);
 
-                        return CreatedAtAction(nameof(RegisterAsync), user);
+                        return CreatedAtAction("Register", user);
                     }
                     return BadRequest(result.Errors.Select(e => e.Description));
+                }
+                catch (MimeKit.ParseException)
+                {
+                    await _userManager.DeleteAsync(user);
+                    return BadRequest(new[] { _localizer["Invalid email"].Value });
                 }
                 catch
                 {
@@ -124,7 +129,7 @@ namespace Squirrel.Controllers
             if (user is null)
                 return BadRequest(new[] { _localizer["User not found"].Value });
             var result = await _userManager.DeleteAsync(user);
-            return result.Succeeded ? Ok() : BadRequest(result.Errors.Select(e => e.Description));
+            return result.Succeeded ? await LogoutAsync() : BadRequest(result.Errors.Select(e => e.Description));
         }
 
         [HttpPost]

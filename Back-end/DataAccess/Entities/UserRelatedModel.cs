@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Entities
 {
-    public class UserRelatedModel
+    public class UserRelatedEntity
     {
         public string UserId { get; set; }
         public User User { get; set; }

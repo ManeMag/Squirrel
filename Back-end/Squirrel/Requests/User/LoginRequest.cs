@@ -4,12 +4,10 @@ namespace Squirrel.Requests.User
 {
     public class LoginRequest
     {
-
-        [DataType(DataType.EmailAddress)]
+        [EmailAddress, Required]
         public string? Email { get; set; }
 
-        [DataType(DataType.Password)]
+        [DataType(DataType.Password), Required]
         public string? Password { get; set; }
-        public bool RememberMe { get; set; }
     }
 }

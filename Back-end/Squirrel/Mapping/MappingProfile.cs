@@ -21,7 +21,7 @@ namespace Squirrel.Mapping
 
             #region Category
 
-            CreateMap<CreateCategoryRequest, Category>();
+            CreateMap<CreateCategoryRequest, Category>().ForMember(c => c.Type, c => c.MapFrom(src => (DataAccess.Entities.Type)src.Type));
             CreateMap<UpdateCategoryRequest, Category>();
 
             CreateMap<Category, CategoryViewModel>();
