@@ -65,11 +65,11 @@ namespace Squirrel.Controllers
                     .FirstOrDefault();
             }
 
-            return Ok(_mapper.Map<IEnumerable<CategoryViewModel>>(user.Categories));
+            return Ok(_mapper.Map<IEnumerable<CategoryViewModel>>(user!.Categories));
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCategory([FromBody] CreateCategoryRequest categoryRequest)
+        public async Task<ActionResult> CreateCategory([FromForm] CreateCategoryRequest categoryRequest)
         {
             var category = _mapper.Map<Category>(categoryRequest);
 
@@ -97,7 +97,7 @@ namespace Squirrel.Controllers
         }
 
         [HttpPatch]
-        public async Task<ActionResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequest categoryRequest)
+        public async Task<ActionResult<CategoryViewModel>> UpdateCategory([FromForm] UpdateCategoryRequest categoryRequest)
         {
             var user = _context.Users
                 .Include(u => u.Categories)

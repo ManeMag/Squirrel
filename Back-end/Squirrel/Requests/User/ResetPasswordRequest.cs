@@ -18,6 +18,6 @@ namespace Squirrel.Requests.User
         [Required]
         public string? Code { get; set; }
 
-        public bool Same => Password == ConfirmPassword;
+        public bool Same() => Password == ConfirmPassword;
     }
 }

@@ -56,7 +56,7 @@ namespace Squirrel.Controllers
 
         [HttpPost]
         public async Task<ActionResult<TransactionViewModel>> CreateTransaction(
-            [FromBody] CreateTransactionRequest transactionRequest)
+            [FromForm] CreateTransactionRequest transactionRequest)
         {
             var category = GetCategory(transactionRequest.CategoryId);
 
@@ -82,7 +82,7 @@ namespace Squirrel.Controllers
 
         [HttpPatch]
         public async Task<ActionResult<TransactionViewModel>> UpdateTransaction(
-            [FromBody] UpdateTransactionRequest transactionRequest)
+            [FromForm] UpdateTransactionRequest transactionRequest)
         {
             var category = GetCategory(transactionRequest.CategoryId);
 
