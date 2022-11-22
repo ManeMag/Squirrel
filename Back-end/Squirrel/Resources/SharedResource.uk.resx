@@ -141,8 +141,36 @@
     <value>Будь ласка, підтвердіть зміну паролю &lt;a href='{0}'&gt;натиснувши тут&lt;/a&gt;.</value>
     <comment>AccountController.cs</comment>
   </data>
+  <data name="Something went wrong. Please try again" xml:space="preserve">
+    <value>Щось пішло не так. Спробуйте знову.</value>
+    <comment>AccountController.cs</comment>
+  </data>
+  <data name="There are not such a category" xml:space="preserve">
+    <value>Такої категорії немає</value>
+    <comment>Wording.cs / categories</comment>
+  </data>
+  <data name="Unable to create category" xml:space="preserve">
+    <value>Неможливо створити категорію</value>
+    <comment>Wording.cs / categories</comment>
+  </data>
+  <data name="Unable to create such a transaction" xml:space="preserve">
+    <value>Неможливо створити таку транзакцію</value>
+    <comment>Wording.cs / transactions</comment>
+  </data>
+  <data name="Unable to update this transaction" xml:space="preserve">
+    <value>Неможливо оновити цю транзакцію</value>
+    <comment>Wording.cs / transactions</comment>
+  </data>
+  <data name="User has no such transaction" xml:space="preserve">
+    <value>Користувач не має таких транзакцій</value>
+    <comment>Wording.cs / transactions</comment>
+  </data>
   <data name="User not found" xml:space="preserve">
     <value>Користувача не знайдено</value>
     <comment>AccountController.cs</comment>
+  </data>
+  <data name="You cannot delete base categories" xml:space="preserve">
+    <value>Ви не можете видалити базову категорію</value>
+    <comment>Wording.cs / categories</comment>
   </data>
 </root>

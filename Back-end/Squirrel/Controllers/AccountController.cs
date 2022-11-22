@@ -141,7 +141,7 @@ namespace Squirrel.Controllers
                                                          htmlMessage: _localizer["Please confirm your password reset by <a href='{0}'>clicking here</a>.", HtmlEncoder.Default.Encode(callbackUrl!)].Value);
                 return Ok();
             }
-            return BadRequest(new[] { _localizer["No user found"].Value });
+            return BadRequest(new[] { _localizer["User not found"].Value });
 
         }
 
