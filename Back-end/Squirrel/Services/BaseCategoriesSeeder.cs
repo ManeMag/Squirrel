@@ -1,7 +1,5 @@
-﻿using DataAccess.Contexts;
-using DataAccess.Entities;
+﻿using DataAccess.Entities;
 using FluentResults;
-using Microsoft.EntityFrameworkCore;
 using Squirrel.Services.Repositories.Abstractions;
 
 namespace Squirrel.Services

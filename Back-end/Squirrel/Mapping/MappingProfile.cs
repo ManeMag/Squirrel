@@ -8,7 +8,7 @@ using Squirrel.Responses.Transaction;
 
 namespace Squirrel.Mapping
 {
-    internal sealed class MappingProfile : Profile
+    public sealed class MappingProfile : Profile
     {
         public MappingProfile()
         {

@@ -18,7 +18,7 @@ namespace Squirrel.UnitTests
             _localizer = Substitute.For<IStringLocalizer>();
 
             var localizedString = new LocalizedString(OriginalMessage, ExpectedMessage);
-            
+
             _localizer[OriginalMessage].Returns(localizedString);
         }
 

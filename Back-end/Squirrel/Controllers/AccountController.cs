@@ -45,14 +45,14 @@ namespace Squirrel.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AuthenticateAsync(LoginRequest model)
+        public async Task<IActionResult> AuthenticateAsync([FromForm] LoginRequest model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
             return result.Succeeded ? Ok() : "Invalid login and/or password".ToBadRequestUsing(_localizer);
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterAsync(RegisterRequest model, string callbackUrl)
+        public async Task<IActionResult> RegisterAsync([FromForm] RegisterRequest model, string callbackUrl)
         {
             if (model.Same)
             {
@@ -128,7 +128,7 @@ namespace Squirrel.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword([FromBody] string email, string path)
+        public async Task<IActionResult> ForgotPassword([FromForm] string email, string path)
         {
             var callbackUrl = Request.Headers["Origin"].FirstOrDefault();
             var user = await _userManager.FindByEmailAsync(email);
@@ -146,10 +146,10 @@ namespace Squirrel.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequest model)
+        public async Task<IActionResult> ResetPasswordAsync([FromForm] ResetPasswordRequest model)
         {
             var callbackUrl = Request.Headers["Origin"].FirstOrDefault();
-            if (model.Same)
+            if (model.Same())
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user is null)
