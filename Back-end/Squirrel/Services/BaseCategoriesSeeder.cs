@@ -1,5 +1,7 @@
 ﻿using DataAccess.Entities;
 using FluentResults;
+using Microsoft.Extensions.Localization;
+using Squirrel.Extensions;
 using Squirrel.Services.Repositories.Abstractions;
 
 namespace Squirrel.Services
@@ -7,6 +9,7 @@ namespace Squirrel.Services
     public sealed class BaseCategorySeeder
     {
         private const string MainPresentationColor = "#FF9B3F";
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         private readonly IUnitOfWork _uow;
         private readonly ILogger<BaseCategorySeeder> _logger;
@@ -15,10 +18,11 @@ namespace Squirrel.Services
             new Category { Name = "Other", Color = MainPresentationColor, IsBaseCategory = true },
         };
 
-        public BaseCategorySeeder(IUnitOfWork uow, ILogger<BaseCategorySeeder> logger)
+        public BaseCategorySeeder(IUnitOfWork uow, ILogger<BaseCategorySeeder> logger, IStringLocalizer<SharedResource> localizer)
         {
             _uow = uow;
             _logger = logger;
+            _localizer = localizer;
         }
 
         public async Task<Result<bool>> SeedCategories(string id)
@@ -39,7 +43,7 @@ namespace Squirrel.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result.Fail("Error occured while trying to save the added categories");
+                return Result.Fail("Error occured while trying to save the added categories".Using(_localizer));
             }
         }
     }

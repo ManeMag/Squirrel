@@ -121,6 +121,14 @@
     <value>Підтвердіть свою електронну пошту</value>
     <comment>AccountController.cs</comment>
   </data>
+  <data name="End date cannot be in future" xml:space="preserve">
+    <value>Кінцева дата не може бути майбутньою</value>
+    <comment>StatictscService.cs</comment>
+  </data>
+  <data name="Error occured while trying to save the added categories" xml:space="preserve">
+    <value>Сталася помилка при зберігання доданої категорії</value>
+    <comment>BaseCategoriesSeeder.cs</comment>
+  </data>
   <data name="Invalid login and/or password" xml:space="preserve">
     <value>Невірний логін та/або пароль</value>
     <comment>AccountController.cs</comment>
@@ -144,6 +152,10 @@
   <data name="Something went wrong. Please try again" xml:space="preserve">
     <value>Щось пішло не так. Спробуйте знову.</value>
     <comment>AccountController.cs</comment>
+  </data>
+  <data name="Start date cannot be greater than end date" xml:space="preserve">
+    <value>Початкова дата не може бути більшою ніж кінцева</value>
+    <comment>StatictscService.cs</comment>
   </data>
   <data name="There are not such a category" xml:space="preserve">
     <value>Такої категорії немає</value>
