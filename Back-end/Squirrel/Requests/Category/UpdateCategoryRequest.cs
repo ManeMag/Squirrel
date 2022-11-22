@@ -1,4 +1,14 @@
-﻿namespace Squirrel.Requests.Category
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Squirrel.Requests.Category
 {
-    public record UpdateCategoryRequest(int Id, string Name, string Color);
+    public class UpdateCategoryRequest
+    {
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Color { get; set; }
+    }
 }

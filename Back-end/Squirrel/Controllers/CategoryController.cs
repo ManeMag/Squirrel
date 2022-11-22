@@ -39,7 +39,7 @@ namespace Squirrel.Controllers
         public async Task<ActionResult<IEnumerable<CategoryViewModel>>> GetCategories()
         {
             var user = _context.Users
-                .Include(u => u.Categories)
+                .Include(u => u.Categories)!
                 .ThenInclude(c => c.Transactions)
                 .Where(u => u.Id == GetUserId())
                 .FirstOrDefault();
@@ -49,7 +49,7 @@ namespace Squirrel.Controllers
                 return BadRequest();
             }
 
-            if (!user.Categories.Any())
+            if (!user.Categories!.Any())
             {
                 var seedingResult = await _seeder.SeedCategories(user.Id);
 
@@ -59,7 +59,7 @@ namespace Squirrel.Controllers
                 }
 
                 user = _context.Users
-                    .Include(u => u.Categories)
+                    .Include(u => u.Categories)!
                     .ThenInclude(c => c.Transactions)
                     .Where(u => u.Id == GetUserId())
                     .FirstOrDefault();
@@ -83,7 +83,7 @@ namespace Squirrel.Controllers
                 return BadRequest();
             }
 
-            user.Categories.Add(category);
+            user.Categories!.Add(category);
             var added = await _context.SaveChangesAsync() > 0;
 
             if (!added)
@@ -109,7 +109,7 @@ namespace Squirrel.Controllers
                 return BadRequest();
             }
 
-            var category = user.Categories
+            var category = user.Categories!
                 .Where(c => c.Id == categoryRequest.Id)
                 .FirstOrDefault();
 
@@ -134,16 +134,16 @@ namespace Squirrel.Controllers
                 return BadRequest();
             }
 
-            var category = user.Categories
+            var category = user.Categories!
                 .Where(c => c.Id == id)
                 .FirstOrDefault();
 
-            if (category.IsBaseCategory)
+            if (category!.IsBaseCategory)
             {
                 return BadRequest(DeletingBaseCategory.Using(_localizer));
             }
 
-            user.Categories.Remove(category);
+            user.Categories!.Remove(category);
 
             return await _context.SaveChangesAsync() > 0
                 ? Ok()

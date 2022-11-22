@@ -50,9 +50,14 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(context,"OK",Toast.LENGTH_LONG).show()
             }
             else {
-                val arr = response.body<List<String>>()
-                for(x in arr)
-                    Toast.makeText(context, x, Toast.LENGTH_SHORT).show()
+                try{
+                    val arr = response.body<List<String>>()
+                    for(x in arr)
+                        Toast.makeText(context, x, Toast.LENGTH_SHORT).show()
+                }
+                catch (e: Exception) {
+                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

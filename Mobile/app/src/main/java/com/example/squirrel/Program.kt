@@ -16,7 +16,7 @@ class Program : Application()  {
                 json()
             }
         }
-        val protocol = "http"
+        const val protocol = "http"
         val domain = "geneirodan.zapto.org"
         val port = "23451"
     }
