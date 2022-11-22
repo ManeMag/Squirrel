@@ -39,7 +39,7 @@ class RegisterActivity : AppCompatActivity() {
         lifecycleScope.launch{
             val response: HttpResponse = Program.client.submitForm(
 
-                url = "${Program.protocol}://${Program.domain}:${Program.port}/api/account/login",
+                url = "${Program.protocol}://${Program.domain}:${Program.port}/api/account/register?callbackurl=geneirodan.zapto.org",
                 formParameters = Parameters.build {
                     append("email", binding.loginPrompt.text.toString())
                     append("password", binding.passwordPrompt.text.toString())
@@ -50,9 +50,14 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(context,"OK",Toast.LENGTH_LONG).show()
             }
             else {
-                val arr = response.body<List<String>>()
-                for(x in arr)
-                    Toast.makeText(context, x, Toast.LENGTH_SHORT).show()
+                try{
+                    val arr = response.body<List<String>>()
+                    for(x in arr)
+                        Toast.makeText(context, x, Toast.LENGTH_SHORT).show()
+                }
+                catch (e: Exception) {
+                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
