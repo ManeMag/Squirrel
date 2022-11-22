@@ -1,6 +1,7 @@
 package com.example.squirrel
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -39,14 +40,14 @@ class RegisterActivity : AppCompatActivity() {
         lifecycleScope.launch{
             val response: HttpResponse = Program.client.submitForm(
 
-                url = "${Program.protocol}://${Program.domain}:${Program.port}/api/account/login",
+                url = "${Program.protocol}://${Program.domain}:${Program.port}/api/account/register?callbackurl=www.example.com",
                 formParameters = Parameters.build {
                     append("email", binding.loginPrompt.text.toString())
                     append("password", binding.passwordPrompt.text.toString())
                     append("confirmpassword", binding.confirmPasswordPrompt.text.toString())
                 }
             )
-            if(response.status == HttpStatusCode.OK) {
+            if(response.status == HttpStatusCode.Created) {
                 Toast.makeText(context,"OK",Toast.LENGTH_LONG).show()
             }
             else {
