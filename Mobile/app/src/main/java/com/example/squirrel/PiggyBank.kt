@@ -2,6 +2,5 @@ package com.example.squirrel
 
 import androidx.fragment.app.Fragment
 
-class Statistics: Fragment(R.layout.fragment_statistics) {
-
+class PiggyBank:Fragment(R.layout.fragment_piggy_bank) {
 }

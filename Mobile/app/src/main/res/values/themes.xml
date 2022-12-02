@@ -40,7 +40,7 @@
     <style name="button_noactive">
         <item name="android:background">@drawable/button_noactive</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/white_text</item>
+        <item name="android:textColor">@color/orange</item>
         <item name="android:textSize">@dimen/button_text_size</item>
     </style>
 

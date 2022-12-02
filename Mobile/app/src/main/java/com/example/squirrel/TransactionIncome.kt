@@ -1,59 +1,76 @@
 package com.example.squirrel
 
+import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.renderscript.ScriptGroup.Binding
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.findViewTreeViewModelStoreOwner
+import androidx.navigation.fragment.findNavController
+import com.example.squirrel.databinding.ActivityMainBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialog.OnDateSetListener {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [TransactionIncome.newInstance] factory method to
- * create an instance of this fragment.
- */
-class TransactionIncome : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding:ActivityMainBinding? = null;
+    private val binding get() = _binding!!
+    private val calendar = Calendar.getInstance()
+    private val formatter = SimpleDateFormat("MMM. dd, yyyy ", Locale.US)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_transaction_income, container, false)
+        _binding = ActivityMainBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment TransactionIncome.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            TransactionIncome().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.activityMainLayout.findViewById<TextView>(R.id.buttonSpendings).setOnClickListener {
+            findNavController().navigate(R.id.action_nav_fragment_transaction_to_transactionSpendings)
+        }
+        binding.root.findViewById<TextView>(R.id.buttonIncome).setOnClickListener {
+            findNavController().navigate(R.id.action_nav_fragment_transactionSpendings_to_nav_fragment_transaction)
+        }
+
+        binding.root.findViewById<EditText>(R.id.datePrompt).setText("sdasdasdasdasdas")
+        binding.root.findViewById<TextView>(R.id.datePickButton).setOnClickListener() {
+            DatePickerDialog(
+                requireContext(),
+                this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        Log.e("Calendar","$year -- $month -- $dayOfMonth")
+        calendar.set(year, month, dayOfMonth)
+        displayFormattedDate(calendar.timeInMillis)
+    }
+
+    private fun displayFormattedDate(timestamp: Long){
+        binding.root.findViewById<EditText>(R.id.datePrompt).setText(formatter.format(timestamp))
+        Log.i("Formatting", timestamp.toString())
+
     }
 }

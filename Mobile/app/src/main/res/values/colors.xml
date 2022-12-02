@@ -10,6 +10,7 @@
     <color name="orange">#FF9B3F</color>
     <color name="white_text">#FFFFFFFF</color>
     <color name="main_background">#F1ECE8</color>
+    <color name="prompt_filed_back">#F9F9F9</color>
     <color name="gray_text">#969696</color>
     <color name="bottom_nav_icon_color">#6ABACF</color>
 </resources>
