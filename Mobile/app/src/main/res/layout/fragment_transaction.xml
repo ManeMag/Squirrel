@@ -57,14 +57,33 @@
         android:hint="@string/hint_prompt_login"
         style="@style/edit_prompt"/>
 
-    <EditText
-        android:id="@+id/loginPrompt2"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="@dimen/vertical_margin_medium"
         android:inputType="textEmailAddress"
         android:hint="@string/hint_prompt_login"
-        style="@style/edit_prompt"/>
+        style="@style/edit_prompt">
+
+
+        <EditText
+            android:id="@+id/categoryText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/prompt_filed_back"
+            android:layout_gravity="start|center"
+            android:layout_marginRight="25dp"
+            android:hint="@string/transaction_choose_category"
+            />
+        <TextView
+            android:id="@+id/categoryPickButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/context_menu_button"
+            android:layout_gravity="end|center"
+            />
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -81,16 +100,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/prompt_filed_back"
-            android:inputType="textEmailAddress"
-            android:layout_gravity="left|center"
+            android:layout_gravity="start|center"
             android:layout_marginRight="25dp"
+            android:hint="@string/transaction_choose_date"
             />
         <TextView
             android:id="@+id/datePickButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/calendar_icon"
-            android:layout_gravity="right|center"
+            android:layout_gravity="end|center"
             />
     </FrameLayout>
 

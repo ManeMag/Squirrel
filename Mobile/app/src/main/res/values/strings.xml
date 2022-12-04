@@ -15,13 +15,12 @@ and Privacy Policy.
     <string name="reg_auth_or"> OR </string>
     <string name="no_have_account_button"><u>Don\'t have a profile yet?</u></string>
     <string name="forgot_password"><u>Forgot your password?</u></string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
     <string name="title_transactions">Transactions</string>
     <string name="title_piggy_bank">Piggy Bank</string>
     <string name="transaction_button_income">Income</string>
+    <string name="transaction_choose_date">Choose date</string>
+    <string name="transaction_choose_category">Choose category</string>
 
 
 </resources>

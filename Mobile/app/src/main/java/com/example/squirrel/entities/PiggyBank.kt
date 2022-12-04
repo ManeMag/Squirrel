@@ -1,3 +1,3 @@
 package com.example.squirrel.entities
 
-data class PiggyBank(var Id: Int,var Name: String,var Amount: Int,var Goal: Double,var UserId: String)
+data class PiggyBank(var id: Int,var name: String,var amount: Int,var goal: Double,var userId: String)

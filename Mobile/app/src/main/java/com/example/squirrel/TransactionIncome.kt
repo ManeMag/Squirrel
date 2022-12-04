@@ -2,55 +2,48 @@ package com.example.squirrel
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.renderscript.ScriptGroup.Binding
 import android.util.Log
-import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
-import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.findViewTreeViewModelStoreOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.squirrel.databinding.ActivityMainBinding
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import com.example.squirrel.entities.Category
+import io.ktor.client.call.*
 
 class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialog.OnDateSetListener {
 
-    private var _binding:ActivityMainBinding? = null;
-    private val binding get() = _binding!!
+
+    private lateinit var layout: View
     private val calendar = Calendar.getInstance()
-    private val formatter = SimpleDateFormat("MMM. dd, yyyy ", Locale.US)
+    private val formatter = SimpleDateFormat("MM.dd.yyyy ", Locale.US)
+    var listCategory = emptyList<Category>()
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = ActivityMainBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.activityMainLayout.findViewById<TextView>(R.id.buttonSpendings).setOnClickListener {
+        this.layout = view
+        var menuCategory = PopupMenu(layout.context, layout.findViewById(R.id.categoryPickButton))
+
+        layout.findViewById<TextView>(R.id.buttonSpendings).setOnClickListener {
             findNavController().navigate(R.id.action_nav_fragment_transaction_to_transactionSpendings)
         }
-        binding.root.findViewById<TextView>(R.id.buttonIncome).setOnClickListener {
+        layout.findViewById<TextView>(R.id.buttonIncome).setOnClickListener {
             findNavController().navigate(R.id.action_nav_fragment_transactionSpendings_to_nav_fragment_transaction)
         }
 
-        binding.root.findViewById<EditText>(R.id.datePrompt).setText("sdasdasdasdasdas")
-        binding.root.findViewById<TextView>(R.id.datePickButton).setOnClickListener() {
+        layout.findViewById<TextView>(R.id.datePickButton).setOnClickListener() {
             DatePickerDialog(
                 requireContext(),
                 this,
@@ -60,17 +53,55 @@ class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialo
             ).show()
         }
 
+        layout.findViewById<EditText>(R.id.categoryText).setEnabled(false)
+        layout.findViewById<EditText>(R.id.datePrompt).setEnabled(false)
+
+
+        lifecycleScope.launch{
+            val response: HttpResponse = Program.client.get("${Program.protocol}://${Program.domain}:${Program.port}/api/category")
+            if(response.status == HttpStatusCode.OK)
+            {
+                Log.e("error",response.body<String>().toString())
+                listCategory = response.body()
+                for(category in listCategory){
+                    Log.i("tag",category.name)
+                }
+            }
+            else {
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show()
+            }
+
+            var count = 0
+            for (category in listCategory)
+            {
+                menuCategory.menu.add(Menu.NONE,count,count,category.name)
+                count++
+            }
+            menuCategory.setOnMenuItemClickListener {menuItem ->
+                val id = menuItem.itemId
+                layout.findViewById<EditText>(R.id.categoryText).setText(menuItem.title)
+                false
+            }
+            layout.findViewById<TextView>(R.id.categoryPickButton).setOnClickListener{
+                menuCategory.show()
+            }
+        }
+
+
     }
 
+
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        Log.e("Calendar","$year -- $month -- $dayOfMonth")
         calendar.set(year, month, dayOfMonth)
         displayFormattedDate(calendar.timeInMillis)
     }
 
-    private fun displayFormattedDate(timestamp: Long){
-        binding.root.findViewById<EditText>(R.id.datePrompt).setText(formatter.format(timestamp))
-        Log.i("Formatting", timestamp.toString())
+    private fun categoryMenuCreate()
+    {
 
+    }
+
+    private fun displayFormattedDate(timestamp: Long){
+        layout.findViewById<EditText>(R.id.datePrompt).setText(formatter.format(timestamp))
     }
 }
