@@ -61,7 +61,9 @@ namespace Squirrel.Services
             {
                 StartDate = startDate,
                 EndDate = endDate,
-                Impact = CalculateImpact(transactionsResult.Value)
+                Impact = CalculateImpact(transactionsResult.Value),
+                Income = transactionsResult.Value.Where(t => t.Amount > 0).Sum(t => t.Amount),
+                Outcome = -transactionsResult.Value.Where(t => t.Amount < 0).Sum(t => t.Amount)
             });
         }
 
@@ -100,7 +102,7 @@ namespace Squirrel.Services
                 return Result.Fail("User not found".Using(_localizer));
             }
 
-            var transactions = userResult.Value.Categories
+            var transactions = userResult.Value.Categories!
                 .SelectMany(c => c.Transactions)
                 .Where(t => startDate <= t.Time && t.Time <= endDate)
                 .ToList();

@@ -32,17 +32,17 @@ namespace Squirrel.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TransactionViewModel>>> GetTransactions()
+        public ActionResult<IEnumerable<TransactionViewModel>> GetTransactions()
         {
             var user = GetUser();
 
-            var transactions = user.Categories.SelectMany(c => c.Transactions);
+            var transactions = user.Categories!.SelectMany(c => c.Transactions);
 
             return Ok(_mapper.Map<IEnumerable<TransactionViewModel>>(transactions));
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<TransactionViewModel>> GetTransactionById(int id)
+        public ActionResult<TransactionViewModel> GetTransactionById(int id)
         {
             var transaction = GetTransaction(id);
 
@@ -117,14 +117,14 @@ namespace Squirrel.Controllers
                 return BadRequest(HasNoTransaction.Using(_localizer));
             }
 
-            _context.Transactions.Remove(transaction);
+            _context.Transactions.Remove(transaction!);
 
             var removed = await _context.SaveChangesAsync() > 0;
 
             return removed ? Ok() : NoContent();
         }
 
-        private bool HasTransaction(Transaction transaction)
+        private bool HasTransaction(Transaction? transaction)
         {
             if (transaction is null)
             {
@@ -134,18 +134,18 @@ namespace Squirrel.Controllers
             var category = GetCategory(transaction.CategoryId);
             var user = GetUser();
 
-            var userHasCategoryOfTransaction = user.Categories
+            var userHasCategoryOfTransaction = user.Categories!
                 .Where(c => c.Id == category.Id)
                 .Any();
 
             return userHasCategoryOfTransaction;
         }
 
-        private Category GetCategory(int id)
+        private Category? GetCategory(int id)
         {
             var user = GetUser();
 
-            var category = user.Categories
+            var category = user.Categories!
                 .Where(c => c.Id == id)
                 .FirstOrDefault();
 
@@ -155,13 +155,13 @@ namespace Squirrel.Controllers
         private User GetUser()
         {
             return _context.Users
-                .Include(u => u.Categories)
+                .Include(u => u.Categories)!
                 .ThenInclude(c => c.Transactions)
                 .Where(u => u.Id == GetUserId())
-                .FirstOrDefault();
+                .FirstOrDefault()!;
         }
 
-        private Transaction GetTransaction(int id) =>
+        private Transaction? GetTransaction(int id) =>
             _context.Transactions.Where(t => t.Id == id).FirstOrDefault();
     }
 }

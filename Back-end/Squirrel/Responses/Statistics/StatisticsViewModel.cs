@@ -15,5 +15,7 @@
         public DateTime EndDate { get; set; }
 
         public DateTime ReceivedAt { get; set; } = DateTime.UtcNow;
+        public double Income { get; set; }
+        public double Outcome { get; set; }
     }
 }
