@@ -115,10 +115,10 @@ namespace Squirrel.Controllers
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user is null)
-                return Redirect($"http://{callbackUrl}?success=0");
+                return Redirect($"{callbackUrl}?success=0");
             var result = await _userManager.ConfirmEmailAsync(user!, code);
             await _userManager.AddToRoleAsync(user!, "user");
-            return Redirect($"http://{callbackUrl}?success={(result.Succeeded ? 1 : 0)}");
+            return Redirect($"{callbackUrl}?success={(result.Succeeded ? 1 : 0)}");
         }
 
         [Authorize(Roles = "user")]
@@ -195,6 +195,26 @@ namespace Squirrel.Controllers
                 }
             }
             return Redirect(returnUrl);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MobileGoogleAuth([FromForm] string email)
+        {
+            User user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+            {
+                user = new()
+                {
+                    UserName = email,
+                    Email = email,
+                    EmailConfirmed = true
+                };
+                var identResult = await _userManager.CreateAsync(user);
+                if (!identResult.Succeeded)
+                    return BadRequest(identResult);
+            }
+            await _signInManager.SignInAsync(user, isPersistent: true);
+            return Ok();
         }
     }
 }
