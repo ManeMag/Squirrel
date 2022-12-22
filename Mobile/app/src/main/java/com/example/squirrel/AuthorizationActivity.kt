@@ -18,7 +18,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.launch
 
-class AuthorizationActivity : AppCompatActivity()  {
+class AuthorizationActivity : BaseActivity()  {
 
     private lateinit var binding : ActivityAuthorizationBinding
 

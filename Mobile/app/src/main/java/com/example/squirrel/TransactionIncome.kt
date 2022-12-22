@@ -46,9 +46,6 @@ class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialo
         layout.findViewById<TextView>(R.id.buttonSpendings).setOnClickListener {
             findNavController().navigate(R.id.action_nav_fragment_transaction_to_transactionSpendings)
         }
-        layout.findViewById<TextView>(R.id.buttonIncome).setOnClickListener {
-            findNavController().navigate(R.id.action_nav_fragment_transactionSpendings_to_nav_fragment_transaction)
-        }
 
         layout.findViewById<TextView>(R.id.datePickButton).setOnClickListener() {
             val dialog = DatePickerDialog(

@@ -17,7 +17,7 @@ import io.ktor.http.*
 import kotlinx.coroutines.launch
 
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : BaseActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
 
