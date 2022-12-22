@@ -1,68 +1,74 @@
 package com.example.squirrel
 
+
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import androidx.navigation.fragment.NavHostFragment
+import android.widget.TextView
+import androidx.core.content.ContextCompat.*
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.squirrel.overrides.MyValueFormatter
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.utils.ViewPortHandler
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [fragment_statistics.newInstance] factory method to
- * create an instance of this fragment.
- */
+class Statistics: Fragment(R.layout.fragment_statistics) {
+    private lateinit var layout: View
+    private lateinit var mChart: PieChart
 
-class fragment_statistics : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        this.layout = view
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        layout.findViewById<TextView>(R.id.buttonSpendings).setOnClickListener {
+            findNavController().navigate(R.id.action_nav_fragment_statistics_to_nav_statisticIncome)
         }
+        layout.findViewById<TextView>(R.id.buttonIncome).setOnClickListener {
+            findNavController().navigate(R.id.action_nav_fragment_statistics_to_nav_statisticSpendings)
+        }
+        mChart = layout.findViewById<PieChart>(R.id.income_spending_chart)
+        chartStyle()
+        setData(1,100)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val fragmentLayout = inflater.inflate(R.layout.fragment_statistics,container,false)
-//        val navController = NavHostFragment.findNavController(this)
-//        fragmentLayout.findViewById<Button>(R.id.button_nav_statistics).setOnClickListener { navController.navigate(R.id.fragment_statistics) }
-//        fragmentLayout.findViewById<Button>(R.id.button_nav_transaction).setOnClickListener { navController.navigate(R.id.fragment_transaction) }
-//        fragmentLayout.findViewById<Button>(R.id.button_nav_piggy_bank).setOnClickListener { navController.navigate(R.id.fragment_piggy_bank) }
 
-        // Inflate the layout for this fragment
-        return fragmentLayout
+    //var stringParamsOfChart: Array<String> = arrayOf("Spendings","Income")
+    fun setData(count: Int,range: Int){
+        val values: ArrayList<PieEntry> = ArrayList()
+
+        values.add(PieEntry(9600f,"Spendings"))
+        values.add(PieEntry(3200f,"Income"))
+
+        var dataSet: PieDataSet = PieDataSet(values,"")
+        val colorsOfChartRGB: ArrayList<Int> = arrayListOf(255 shl 24 or "E53F3F".toInt(16), 255 shl 24 or "18C715".toInt(16))
+        dataSet.setColors(colorsOfChartRGB)
+        dataSet.setDrawValues(true)
+        dataSet.selectionShift = 0f
+        var data: PieData = PieData(dataSet)
+        data.setValueFormatter(MyValueFormatter())
+        data.setValueTextSize(12.5f)
+        data.setValueTextColor(Color.WHITE)
+        mChart.data = data
+        mChart.invalidate()
+
     }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment activity_statistics.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            fragment_statistics().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    fun chartStyle(){
+        mChart.setDrawSliceText(false);
+        mChart.setBackgroundColor(getColor(requireContext(), R.color.main_background))
+        mChart.setHoleColor(Color.TRANSPARENT)
+        mChart.centerText = "Octover"
+        mChart.setCenterTextOffset(0f,25f)
+        mChart.setCenterTextSize(20f)
+        mChart.isRotationEnabled = false
+        mChart.description.isEnabled = false
+        mChart.setUsePercentValues(false)
+        mChart.getLegend().setEnabled(false)
+        mChart.maxAngle = 180.toFloat()
+        mChart.rotationAngle = 360.toFloat()
     }
 }

@@ -1,59 +1,140 @@
 package com.example.squirrel
 
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.graphics.*
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
+import android.util.Log
+import android.view.Menu
 import android.view.View
-import android.view.ViewGroup
+import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.widget.CustomPopupMenu
+import androidx.core.content.ContextCompat.getDrawable
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.squirrel.entities.Category
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import io.ktor.util.date.*
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [TransactionIncome.newInstance] factory method to
- * create an instance of this fragment.
- */
-class TransactionIncome : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialog.OnDateSetListener {
+    private lateinit var layout: View
+    private val calendar = Calendar.getInstance()
+    private val formatter = SimpleDateFormat("MM.dd.yyyy", Locale.US)
+    var listCategory = emptyList<Category>()
+    var categoryId = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        this.layout = view
+        var menuCategory = CustomPopupMenu(layout.context, layout.findViewById(R.id.categoryPickButton))
+
+        layout.findViewById<TextView>(R.id.buttonSpendings).setOnClickListener {
+            findNavController().navigate(R.id.action_nav_fragment_transaction_to_transactionSpendings)
         }
-    }
+        layout.findViewById<TextView>(R.id.buttonIncome).setOnClickListener {
+            findNavController().navigate(R.id.action_nav_fragment_transactionSpendings_to_nav_fragment_transaction)
+        }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_transaction_income, container, false)
-    }
+        layout.findViewById<TextView>(R.id.datePickButton).setOnClickListener() {
+            DatePickerDialog(
+                requireContext(),
+                this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment TransactionIncome.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            TransactionIncome().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        layout.findViewById<EditText>(R.id.categoryText).setEnabled(false)
+        layout.findViewById<EditText>(R.id.datePrompt).setEnabled(false)
+
+        // Filling category list
+        lifecycleScope.launch{
+            val response: HttpResponse = Program.client.get("${Program.protocol}://${Program.domain}:${Program.port}/api/category/1")
+            if(response.status == HttpStatusCode.OK)
+            {
+                listCategory = response.body()
+            }
+            else {
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show()
+            }
+
+
+            // creating popup menu
+            var count = 0
+            categoryId = listCategory[0].id
+            for (category in listCategory)
+            {
+                var drawable = getDrawable(requireContext(),R.drawable.oval)
+                var gradientDrawable = drawable as GradientDrawable
+                menuCategory.menu.add(Menu.NONE,category.id,count,category.name).apply {
+                    gradientDrawable.setColor(255 shl 24 or  category.color.substring(1).toInt(16))
+                    setIcon(gradientDrawable)
+                }
+
+                count++
+            }
+
+            menuCategory.setOnMenuItemClickListener {menuItem ->
+                categoryId = menuItem.itemId
+                layout.findViewById<EditText>(R.id.categoryText).setText(menuItem.title)
+                false
+            }
+            layout.findViewById<TextView>(R.id.categoryPickButton).setOnClickListener{
+                menuCategory.show()
+            }
+        }
+
+        layout.findViewById<TextView>(R.id.createTransactionButton).setOnClickListener{
+            lifecycleScope.launch{
+                val response: HttpResponse = Program.client.post(
+                    "${Program.protocol}://${Program.domain}:${Program.port}/api/transaction",
+                )
+                {
+                    setBody(MultiPartFormDataContent(formData{
+                        append("amount",layout.findViewById<EditText>(R.id.amountPrompt).text.toString())
+                        append("description",layout.findViewById<EditText>(R.id.namePrompt).text.toString())
+                        append("categoryId",categoryId)
+                        append("time",layout.findViewById<EditText>(R.id.datePrompt).text.toString())
+                    }))
+                }
+                if(response.status == HttpStatusCode.Created) {
+                    Toast.makeText(context, "Transaction created!", Toast.LENGTH_LONG).show()
+                }
+                else {
+                    Log.e("Error",response.body())
+                    val arr = response.body<List<String>>()
+                    for(x in arr)
+                        Toast.makeText(context, x, Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+    }
+
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        calendar.set(year, month, dayOfMonth)
+        displayFormattedDate(calendar.timeInMillis)
+    }
+
+
+    private fun displayFormattedDate(timestamp: Long){
+        layout.findViewById<EditText>(R.id.datePrompt).setText(formatter.format(timestamp))
     }
 }
