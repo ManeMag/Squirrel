@@ -37,9 +37,6 @@ class TransactionSpendings:Fragment(R.layout.fragment_transaction_spendings), Da
         this.layout = view
         var menuCategory = CustomPopupMenu(layout.context, layout.findViewById(R.id.categoryPickButton))
 
-        view.findViewById<TextView>(R.id.buttonSpendings).setOnClickListener {
-            findNavController().navigate(R.id.action_nav_fragment_transaction_to_transactionSpendings)
-        }
         view.findViewById<TextView>(R.id.buttonIncome).setOnClickListener {
             findNavController().navigate(R.id.action_nav_fragment_transactionSpendings_to_nav_fragment_transaction)
         }
