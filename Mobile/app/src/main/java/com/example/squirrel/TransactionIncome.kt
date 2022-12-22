@@ -86,7 +86,6 @@ class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialo
                     gradientDrawable.setColor(255 shl 24 or  category.color.substring(1).toInt(16))
                     setIcon(gradientDrawable)
                 }
-
                 count++
             }
 

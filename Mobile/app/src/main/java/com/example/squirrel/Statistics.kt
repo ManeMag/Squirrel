@@ -4,6 +4,8 @@ package com.example.squirrel
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
@@ -25,16 +27,19 @@ class Statistics: Fragment(R.layout.fragment_statistics) {
 
         var ft = childFragmentManager.beginTransaction()
         var fragment: Fragment? = null
-        R.id.layout_statistic_income -> fragment = ComplainFragment()
 
-
-        layout.findViewById<TextView>(R.id.buttonSpendings).setOnClickListener {
-            //findNavController().navigate(R.id.action_nav_fragment_statistics_to_nav_statisticIncome)
-            ft.replace(R.id.nastedFragmetsLayout,fragment)
+        layout.findViewById<RadioGroup>(R.id.radioGroup).setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.buttonSpendings -> parentFragmentManager.beginTransaction().replace(R.id.nastedFragmetsLayout, StatisticSpendings()).commit()
+                R.id.buttonIncome -> parentFragmentManager.beginTransaction().replace(R.id.nastedFragmetsLayout, StatisticIncome()).commit()
+            }
         }
-        layout.findViewById<TextView>(R.id.buttonIncome).setOnClickListener {
-            findNavController().navigate(R.id.action_nav_fragment_statistics_to_nav_statisticSpendings)
-        }
+//        layout.findViewById<RadioGroup>(R.id.buttonSpendings).setOnClickListener {
+//            findNavController().navigate(R.id.action_nav_fragment_statistics_to_nav_statisticIncome)
+//        }
+//        layout.findViewById<RadioGroup>(R.id.buttonIncome).setOnClickListener {
+//            findNavController().navigate(R.id.action_nav_fragment_statistics_to_nav_statisticSpendings)
+//        }
         mChart = layout.findViewById<PieChart>(R.id.income_spending_chart)
         chartStyle()
         setData(1,100)
