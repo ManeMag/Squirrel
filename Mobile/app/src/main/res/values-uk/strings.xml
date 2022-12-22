@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Squirrel</string>
+    <string name="title_statistics">Статистика</string>
+    <string name="title_register_">Реєстрація</string>
+    <string name="title_authorization">Авторизація</string>
+    <string name="hint_prompt_login">Введіть ваш логін</string>
+    <string name="hint_prompt_password">Введіть ваш пароль</string>
+    <string name="hint_prompt_confirm_password">Повторіть ваш пароль</string>
+    <string name="button_authorization_text">Увійти</string>
+    <string name="button_register_text">Зареєструватися</string>
+    <string name="privacy_policy_attention">Натискаючи цю кнопку,
+ви погоджуєтесь з Угодою Користувача
+та Політикою Конфіденційності.
+    </string>
+    <string name="reg_auth_or"> АБО </string>
+    <string name="no_have_account_button"><u>Ще немає профілю?</u></string>
+    <string name="forgot_password"><u>Забув пароль?</u></string>
+    <string name="title_transactions">Транзакції</string>
+    ///////////
+    <string name="transaction_button_income">Доходи</string>
+    <string name="title_piggy_bank">Скарбничка</string>
+    <string name="transaction_choose_date">Choose date</string>
+    <string name="transaction_choose_category">Choose category</string>
+    <string name="transaction_sum">Sum</string>
+    <string name="transaction_name">Name</string>
+    <string name="transaction_bottom_text">Більчатко піклується\n про ваші гроші</string>
+</resources>
