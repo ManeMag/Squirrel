@@ -100,10 +100,6 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
                 setData(spendingsIncomeRatioChart, values)
             }
         }
-
-        spendingsIncomeRatioChart = layout.findViewById<PieChart>(R.id.income_spending_chart)
-        chartStyle(spendingsIncomeRatioChart)
-        setData(1,100,spendingsIncomeRatioChart)
     }
 
     private fun setData(mChart: PieChart, values: ArrayList<PieEntry>) {

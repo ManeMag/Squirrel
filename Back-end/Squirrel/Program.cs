@@ -117,7 +117,10 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 app.UseCors(builder => builder
-    .WithOrigins("http://178.216.32.63",
+    .WithOrigins("http://localhost:3000",
+                 "http://195.149.108.41",
+                 "http://195.149.108.41:3000",
+                 "http://178.216.32.63",
                  "https://178.216.32.63",
                  "http://geneirodan.zapto.org",
                  "https://geneirodan.zapto.org",
