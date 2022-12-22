@@ -5,7 +5,9 @@ import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.DatePicker
+import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import com.example.squirrel.overrides.MyValueFormatter
@@ -15,7 +17,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class Statistics: Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDateSetListener {
@@ -28,14 +29,19 @@ class Statistics: Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDat
         super.onViewCreated(view, savedInstanceState)
         this.layout = view
 
+
+
         layout.findViewById<TextView>(R.id.calendar_button).setOnClickListener() {
-            DatePickerDialog(
+            val dialog = DatePickerDialog(
                 requireContext(),
                 this,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+
+            )
+            dialog.datePicker.maxDate = Date().time
+            dialog.show()
         }
 
         parentFragmentManager.beginTransaction().replace(R.id.nastedFragmetsLayout, StatisticIncome()).commit()
@@ -49,6 +55,7 @@ class Statistics: Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDat
         spendingsIncomeRatioChart = layout.findViewById<PieChart>(R.id.income_spending_chart)
         chartStyle(spendingsIncomeRatioChart)
         setData(1,100,spendingsIncomeRatioChart)
+
     }
 
 

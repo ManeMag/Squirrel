@@ -55,7 +55,13 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
+    
+    <style name="category_table_icon">
+        <item name="android:layout_weight">1</item>
+    </style>
+    <style name="category_table_name">
+        <item name="android:layout_weight">0</item>
+    </style>
     <style name="Theme.Squirrel.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Squirrel.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
