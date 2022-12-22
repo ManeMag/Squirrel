@@ -42,13 +42,16 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
         this.layout = view
 
         layout.findViewById<TextView>(R.id.calendar_button).setOnClickListener() {
-            DatePickerDialog(
+            val dialog = DatePickerDialog(
                 requireContext(),
                 this,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+
+            )
+            dialog.datePicker.maxDate = Date().time
+            dialog.show()
         }
 
         parentFragmentManager.beginTransaction()
@@ -71,7 +74,10 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
         val end = LocalDate(
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH) + 1,
-            min(calendar.getActualMaximum(Calendar.DAY_OF_MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+            min(
+                calendar.getActualMaximum(Calendar.DAY_OF_MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
         )
         lifecycleScope.launch {
             val response = client.get("$protocol://$domain:$port/api/Statistics") {
@@ -127,7 +133,6 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         calendar.set(year, month, dayOfMonth)
-        displayFormattedDate(calendar.timeInMillis)
         val start = LocalDate(
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH) + 1,
@@ -136,7 +141,10 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
         val end = LocalDate(
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH) + 1,
-            calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+            min(
+                calendar.getActualMaximum(Calendar.DAY_OF_MONTH),
+                SimpleDateFormat("dd", Locale.US).format(Date()).toInt()
+            )
         )
         lifecycleScope.launch {
             val response = client.get("$protocol://$domain:$port/api/Statistics") {
@@ -154,6 +162,7 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
                 values.add(PieEntry(statistics.income.toFloat(), "Income"))
                 chartStyle(spendingsIncomeRatioChart)
                 setData(spendingsIncomeRatioChart, values)
+                displayFormattedDate(calendar.timeInMillis)
             }
         }
     }
