@@ -30,19 +30,27 @@
         </TableLayout>
     </ScrollView>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center">
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/category_layout1"
-                android:gravity="center">
-            </TableLayout>
-        </ScrollView>
+
 
     </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginTop="20dp">
 
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/transaction_layout"
+                android:gravity="center">
+            </TableLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

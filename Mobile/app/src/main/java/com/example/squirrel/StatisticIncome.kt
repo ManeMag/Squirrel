@@ -1,5 +1,6 @@
 package com.example.squirrel
 
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.squirrel.entities.Category
+import com.example.squirrel.entities.Transaction
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -18,6 +20,10 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class StatisticIncome: Fragment(R.layout.fragment_statistic_income) {
@@ -44,10 +50,49 @@ class StatisticIncome: Fragment(R.layout.fragment_statistic_income) {
                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show()
             }
 
-            val rows = listCategory.size
-            val columns = 2
-            val tableLayout = layout.findViewById<TableLayout>(R.id.category_layout)
-            for (i in 0 until rows) {
+            val rowsCategory = listCategory.size
+            val columnsCategory = 2
+            val tableLayoutCategory = layout.findViewById<TableLayout>(R.id.category_layout)
+            for (i in 0 until rowsCategory) {
+                val tableRow = TableRow(layout.context)
+                tableRow.setLayoutParams(
+                    TableRow.LayoutParams(
+                        TableRow.LayoutParams.MATCH_PARENT,
+                        TableRow.LayoutParams.WRAP_CONTENT
+                    )
+                )
+                val imageView = ImageView(layout.context)
+                var drawable = getDrawable(requireContext(), R.drawable.category_color_icon)
+                var gradientDrawable = drawable as GradientDrawable
+                gradientDrawable.setColor(
+                    255 shl 24 or listCategory[i].color.substring(1).toInt(16)
+                )
+                imageView.setImageDrawable(gradientDrawable)
+                imageView.setPadding(70, 15, 20, 20)
+
+                var categoryName = TextView(layout.context)
+                categoryName.textSize = 20f
+                categoryName.setText(listCategory[i].name)
+
+                tableRow.addView(imageView, 0)
+                tableRow.addView(categoryName, 1)
+                tableLayoutCategory.addView(tableRow, i)
+            }
+
+
+
+            var listTransactions = ArrayList<String>()
+            var listTransactions1 = ArrayList<String>()
+            for (i in 0 until 5) {
+                listTransactions.add("300")
+                listTransactions1.add("sdadasdasdad")
+            }
+
+
+            val rowsTransaction = listTransactions.size
+            val columnsTransaction = 2
+            val tableLayout = layout.findViewById<TableLayout>(R.id.transaction_layout)
+            for (i in 0 until rowsTransaction) {
                 val tableRow = TableRow(layout.context)
                 tableRow.setLayoutParams(
                     TableRow.LayoutParams(
@@ -56,23 +101,23 @@ class StatisticIncome: Fragment(R.layout.fragment_statistic_income) {
                     )
                 )
 
-                val imageView = ImageView(layout.context)
-                var drawable = getDrawable(requireContext(), R.drawable.category_color_icon)
-                var gradientDrawable = drawable as GradientDrawable
-                gradientDrawable.setColor(255 shl 24 or  listCategory[i].color.substring(1).toInt(16))
-                imageView.setImageDrawable(gradientDrawable)
-                imageView.setPadding(70,15,20,0)
+                var TransactionName = TextView(layout.context)
+                var TransactionValue = TextView(layout.context)
+                TransactionName.textSize = 20f
+                TransactionName.setText(listTransactions1[i])
+                TransactionName.setPadding(25, 15, 0, 0)
+                TransactionValue.textSize = 20f
+                TransactionValue.setText("+" + listTransactions[i] + "$")
+                TransactionValue.setTextColor(Color.GREEN)
 
-                var categoryName = TextView(layout.context)
-                categoryName.textSize = 20f
-                categoryName.setText(listCategory[i].name)
-
-                tableRow.addView(imageView, 0)
-                tableRow.addView(categoryName, 1)
+                tableRow.addView(TransactionValue, 0)
+                tableRow.addView(TransactionName, 1)
                 tableLayout.addView(tableRow, i)
             }
+
         }
     }
+
     fun setData(count: Int,range: Int,mChart: PieChart){
         val values: ArrayList<PieEntry> = ArrayList()
 
