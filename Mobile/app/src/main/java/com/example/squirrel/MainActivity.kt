@@ -3,6 +3,7 @@ package com.example.squirrel
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -47,12 +48,11 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_statistic_spendings
             )
         )
-
         val toolBar = findViewById<Toolbar>(R.id.toolbar)
         toolBar.setupWithNavController(navController,appBarConfiguration)
         navView.setupWithNavController(navController)
 
-
+        //binding.toolbarInclude.toolbarCalendarButton.visibility = View.VISIBLE
     }
 
     private suspend fun greeting(): String {

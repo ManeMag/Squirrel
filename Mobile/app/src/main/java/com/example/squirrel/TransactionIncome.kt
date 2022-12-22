@@ -33,7 +33,7 @@ class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialo
     private lateinit var layout: View
     private val calendar = Calendar.getInstance()
     private val formatter = SimpleDateFormat("MM.dd.yyyy", Locale.US)
-    var listCategory = emptyList<Category>()
+    public var listCategory = emptyList<Category>()
     var categoryId = 0
 
 
