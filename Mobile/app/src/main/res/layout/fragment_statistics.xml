@@ -27,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="@dimen/vertical_margin_medium"
         android:gravity="center_horizontal">
         <TextView
             android:id="@+id/buttonIncome"
@@ -52,5 +53,12 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/vertical_margin_medium"
+        android:id="@+id/nastedFragmetsLayout">
+
+    </FrameLayout>
 
 </LinearLayout>

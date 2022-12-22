@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.core.content.ContextCompat.*
+import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.squirrel.overrides.MyValueFormatter
@@ -13,8 +13,6 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.formatter.PercentFormatter
-import com.github.mikephil.charting.utils.ViewPortHandler
 
 
 class Statistics: Fragment(R.layout.fragment_statistics) {
@@ -25,8 +23,14 @@ class Statistics: Fragment(R.layout.fragment_statistics) {
         super.onViewCreated(view, savedInstanceState)
         this.layout = view
 
+        var ft = childFragmentManager.beginTransaction()
+        var fragment: Fragment? = null
+        R.id.layout_statistic_income -> fragment = ComplainFragment()
+
+
         layout.findViewById<TextView>(R.id.buttonSpendings).setOnClickListener {
-            findNavController().navigate(R.id.action_nav_fragment_statistics_to_nav_statisticIncome)
+            //findNavController().navigate(R.id.action_nav_fragment_statistics_to_nav_statisticIncome)
+            ft.replace(R.id.nastedFragmetsLayout,fragment)
         }
         layout.findViewById<TextView>(R.id.buttonIncome).setOnClickListener {
             findNavController().navigate(R.id.action_nav_fragment_statistics_to_nav_statisticSpendings)
