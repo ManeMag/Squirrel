@@ -33,7 +33,7 @@ class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialo
     private lateinit var layout: View
     private val calendar = Calendar.getInstance()
     private val formatter = SimpleDateFormat("MM.dd.yyyy", Locale.US)
-    var listCategory = emptyList<Category>()
+    public var listCategory = emptyList<Category>()
     var categoryId = 0
 
 
@@ -51,13 +51,16 @@ class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialo
         }
 
         layout.findViewById<TextView>(R.id.datePickButton).setOnClickListener() {
-            DatePickerDialog(
+            val dialog = DatePickerDialog(
                 requireContext(),
                 this,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+
+            )
+            dialog.datePicker.maxDate = Date().time
+            dialog.show()
         }
 
         layout.findViewById<EditText>(R.id.categoryText).setEnabled(false)
@@ -86,7 +89,6 @@ class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialo
                     gradientDrawable.setColor(255 shl 24 or  category.color.substring(1).toInt(16))
                     setIcon(gradientDrawable)
                 }
-
                 count++
             }
 

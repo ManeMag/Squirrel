@@ -18,14 +18,14 @@
     app:titleTextColor="@color/white_text">
 
 <!--    <TextView-->
-<!--        android:id="@+id/toolbar_title"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="36dp"-->
-<!--        android:layout_marginRight="@dimen/toolbar_text_horizontal_margin"-->
-<!--        android:layout_marginLeft="@dimen/toolbar_text_horizontal_margin"-->
+<!--        android:visibility="gone"-->
+<!--        android:layout_gravity="right"-->
+<!--        android:id="@+id/toolbar_calendar_button"-->
+<!--        android:layout_width="30dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:layout_marginRight="@dimen/vertical_margin_small"-->
 <!--        android:paddingHorizontal="@dimen/toolbar_text_horizontal_padding"-->
-<!--        android:layout_marginBottom="20dp"-->
-<!--        android:text="@string/title_statistics_toolbar"-->
+<!--        android:background="@drawable/calendar_white_icon"-->
 <!--        style="@style/text_title_style"-->
 <!--        />-->
 </androidx.appcompat.widget.Toolbar>

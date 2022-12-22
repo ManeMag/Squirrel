@@ -25,6 +25,7 @@ and Privacy Policy.
     <string name="transaction_name">Name</string>
     <string name="transaction_bottom_text">The squirrel cares\n about your money</string>
     <string name="transaction_create_button">Create</string>
+    <string name="spendings">Spendings</string>
 
 
 </resources>

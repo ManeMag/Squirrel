@@ -5,13 +5,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Statistics">
-
+    <TextView
+        android:visibility="visible"
+        android:layout_gravity="end"
+        android:id="@+id/calendar_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginTop="22dp"
+        android:paddingHorizontal="@dimen/toolbar_text_horizontal_padding"
+        android:background="@drawable/calendar_white_icon"
+        style="@style/text_title_style"
+        />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_marginTop="@dimen/top_margin_from_toolbar">
+            android:layout_marginTop="19dp">
+
 
             <com.github.mikephil.charting.charts.PieChart
                 android:layout_width="225dp"
@@ -23,34 +35,46 @@
 
         </RelativeLayout>
 
-    <LinearLayout
+    <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="@dimen/vertical_margin_medium"
         android:gravity="center_horizontal">
-        <TextView
+        <RadioButton
             android:id="@+id/buttonIncome"
+            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="34dp"
             android:minWidth="120dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
             android:text="@string/transaction_button_income"
-            android:textSize="22sp"
-            style="@style/button"/>
+            android:background="@drawable/radio_button"
+            style="@style/radio_button"
+            android:checked="true"/>
 
-        <TextView
+        <RadioButton
             android:id="@+id/buttonSpendings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:minHeight="34dp"
             android:minWidth="120dp"
-            android:layout_marginLeft="15dp"
-            android:text="Spendings"
-            android:textSize="22sp"
-            style="@style/button_noactive"/>
+            android:background="@drawable/radio_button"
+            android:layout_marginStart="15dp"
+            android:text="@string/spendings"
+            style="@style/radio_button"/>
 
-    </LinearLayout>
+    </RadioGroup>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/vertical_margin_medium"
+        android:id="@+id/nastedFragmetsLayout">
+
+    </FrameLayout>
 
 </LinearLayout>
