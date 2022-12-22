@@ -25,6 +25,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import java.lang.Math.min
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -61,6 +62,7 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
                         .replace(R.id.nastedFragmetsLayout, StatisticIncome()).commit()
                 }
             }
+        spendingsIncomeRatioChart = layout.findViewById(R.id.income_spending_chart)
         val start = LocalDate(
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH) + 1,
@@ -69,9 +71,8 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
         val end = LocalDate(
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH) + 1,
-            calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+            min(calendar.getActualMaximum(Calendar.DAY_OF_MONTH), calendar.get(Calendar.DAY_OF_MONTH))
         )
-        spendingsIncomeRatioChart = layout.findViewById(R.id.income_spending_chart)
         lifecycleScope.launch {
             val response = client.get("$protocol://$domain:$port/api/Statistics") {
                 url {
@@ -127,6 +128,34 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         calendar.set(year, month, dayOfMonth)
         displayFormattedDate(calendar.timeInMillis)
+        val start = LocalDate(
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH) + 1,
+            1
+        )
+        val end = LocalDate(
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH) + 1,
+            calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        )
+        lifecycleScope.launch {
+            val response = client.get("$protocol://$domain:$port/api/Statistics") {
+                url {
+                    parameters.append("startDate", start.toString())
+                    parameters.append("endDate", end.toString())
+                }
+            }
+            Log.e("Status", response.status.toString())
+            Log.e("Body", response.body())
+            if (response.status == HttpStatusCode.OK) {
+                val statistics: com.example.squirrel.models.Statistics = response.body()
+                val values: ArrayList<PieEntry> = ArrayList()
+                values.add(PieEntry(statistics.outcome.toFloat(), "Spendings"))
+                values.add(PieEntry(statistics.income.toFloat(), "Income"))
+                chartStyle(spendingsIncomeRatioChart)
+                setData(spendingsIncomeRatioChart, values)
+            }
+        }
     }
 
 

@@ -15,7 +15,7 @@ class Statistics (
     var impact : List<Impact>,
     var startDate : LocalDateTime,
     var endDate : LocalDateTime,
-    var receivedAt: LocalDateTime,
+    var receivedAt: String,
     var income : Double,
     var outcome : Double
     )
