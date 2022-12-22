@@ -42,7 +42,9 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_fragment_transaction,
             R.id.nav_fragment_statistics,
             R.id.nav_fragment_piggy_bank,
-            R.id.nav_fragment_transactionSpendings
+            R.id.nav_fragment_transactionSpendings,
+            R.id.nav_statistic_income,
+            R.id.nav_statistic_spendings
             )
         )
 

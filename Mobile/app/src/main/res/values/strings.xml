@@ -21,6 +21,10 @@ and Privacy Policy.
     <string name="transaction_button_income">Income</string>
     <string name="transaction_choose_date">Choose date</string>
     <string name="transaction_choose_category">Choose category</string>
+    <string name="transaction_sum">Sum</string>
+    <string name="transaction_name">Name</string>
+    <string name="transaction_bottom_text">The squirrel cares\n about your money</string>
+    <string name="transaction_create_button">Create</string>
 
 
 </resources>

@@ -44,6 +44,13 @@
         <item name="android:textSize">@dimen/button_text_size</item>
     </style>
 
+    <style name="radio_button">
+        <item name="android:button">@drawable/radio_button</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/orange</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+    </style>
+
     <style name="Theme.Squirrel.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

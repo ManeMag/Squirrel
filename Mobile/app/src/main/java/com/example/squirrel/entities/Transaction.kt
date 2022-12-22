@@ -5,10 +5,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Transaction(
     var id: Int,
-    var time: DateTimeUnit,
+    var time: kotlinx.datetime.LocalDateTime,
     var amount: Double,
     var description: String,
-    var categoryId: Int,
-    var category: Category
+    var categoryId: Int
 )
 

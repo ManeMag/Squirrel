@@ -13,4 +13,5 @@
     <color name="prompt_filed_back">#F9F9F9</color>
     <color name="gray_text">#969696</color>
     <color name="bottom_nav_icon_color">#6ABACF</color>
+    <color name="prompt_field">#fffbf8</color>
 </resources>
