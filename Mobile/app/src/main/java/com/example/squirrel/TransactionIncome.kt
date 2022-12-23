@@ -33,7 +33,7 @@ class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialo
     private lateinit var layout: View
     private val calendar = Calendar.getInstance()
     private val formatter = SimpleDateFormat("MM.dd.yyyy", Locale.US)
-    public var listCategory = emptyList<Category>()
+    var listCategory = emptyList<Category>()
     var categoryId = 0
 
 
@@ -47,7 +47,7 @@ class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialo
             findNavController().navigate(R.id.action_nav_fragment_transaction_to_transactionSpendings)
         }
 
-        layout.findViewById<TextView>(R.id.datePickButton).setOnClickListener() {
+        layout.findViewById<TextView>(R.id.datePickButton).setOnClickListener {
             val dialog = DatePickerDialog(
                 requireContext(),
                 this,

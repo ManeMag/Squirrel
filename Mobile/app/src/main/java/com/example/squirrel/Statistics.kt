@@ -6,7 +6,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.DatePicker
+import android.widget.RadioGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +17,7 @@ import com.example.squirrel.Program.Companion.client
 import com.example.squirrel.Program.Companion.domain
 import com.example.squirrel.Program.Companion.port
 import com.example.squirrel.Program.Companion.protocol
+import com.example.squirrel.entities.Transaction
 import com.example.squirrel.overrides.MyValueFormatter
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -28,7 +32,6 @@ import kotlinx.datetime.LocalDate
 import java.lang.Math.min
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDateSetListener {
@@ -40,6 +43,8 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.layout = view
+
+
 
         layout.findViewById<TextView>(R.id.calendar_button).setOnClickListener() {
             val dialog = DatePickerDialog(
@@ -53,33 +58,23 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
             dialog.datePicker.maxDate = Date().time
             dialog.show()
         }
-
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.nastedFragmetsLayout, StatisticIncome()).commit()
-        layout.findViewById<RadioGroup>(R.id.radioGroup)
-            .setOnCheckedChangeListener { _, checkedId ->
-                when (checkedId) {
-                    R.id.buttonSpendings -> parentFragmentManager.beginTransaction()
-                        .replace(R.id.nastedFragmetsLayout, StatisticSpendings()).commit()
-                    R.id.buttonIncome -> parentFragmentManager.beginTransaction()
-                        .replace(R.id.nastedFragmetsLayout, StatisticIncome()).commit()
-                }
-            }
-        spendingsIncomeRatioChart = layout.findViewById(R.id.income_spending_chart)
-        val start = LocalDate(
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH) + 1,
-            1
-        )
-        val end = LocalDate(
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH) + 1,
-            min(
-                calendar.getActualMaximum(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            )
-        )
         lifecycleScope.launch {
+            val income = mutableListOf<Transaction>()
+            val spendings = mutableListOf<Transaction>()
+            spendingsIncomeRatioChart = layout.findViewById(R.id.income_spending_chart)
+            val start = LocalDate(
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1,
+                1
+            )
+            val end = LocalDate(
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1,
+                kotlin.math.min(
+                    calendar.getActualMaximum(Calendar.DAY_OF_MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                )
+            )
             val response = client.get("$protocol://$domain:$port/api/Statistics") {
                 url {
                     parameters.append("startDate", start.toString())
@@ -90,11 +85,29 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
             Log.e("Body", response.body())
             if (response.status == HttpStatusCode.OK) {
                 val statistics: com.example.squirrel.models.Statistics = response.body()
+
+                statistics.transactions.forEach {
+                    if(it.amount > 0)
+                        income.add(it)
+                    else
+                        spendings.add(it)
+                }
                 val values: ArrayList<PieEntry> = ArrayList()
-                values.add(PieEntry(statistics.outcome.toFloat(), "Spendings"))
-                values.add(PieEntry(statistics.income.toFloat(), "Income"))
+                values.add(PieEntry(statistics.outcome.toFloat(), getString(R.string.spendings)))
+                values.add(PieEntry(statistics.income.toFloat(), getString(R.string.income)))
                 chartStyle(spendingsIncomeRatioChart)
                 setData(spendingsIncomeRatioChart, values)
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.nastedFragmetsLayout, StatisticIncome(income, statistics.impact)).commit()
+                layout.findViewById<RadioGroup>(R.id.radioGroup)
+                    .setOnCheckedChangeListener { _, checkedId ->
+                        when (checkedId) {
+                            R.id.buttonSpendings -> parentFragmentManager.beginTransaction()
+                                .replace(R.id.nastedFragmetsLayout, StatisticSpendings(spendings, statistics.impact)).commit()
+                            R.id.buttonIncome -> parentFragmentManager.beginTransaction()
+                                .replace(R.id.nastedFragmetsLayout, StatisticIncome(income, statistics.impact)).commit()
+                        }
+                    }
             }
         }
     }
