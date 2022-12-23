@@ -19,7 +19,7 @@
             android:id="@+id/google_auth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/squirellnew_1"
+            android:background="@drawable/squirell_logo_1"
             android:contentDescription="Squirell"
             tools:ignore="ImageContrastCheck" />
 
@@ -93,7 +93,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_medium"
                 android:hint="@string/hint_prompt_login"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:text="admin@nextgenmail.com"/>
 
             <EditText
                 android:id="@+id/passwordPrompt"
@@ -102,7 +103,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_medium"
                 android:hint="@string/hint_prompt_password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:text="_Aa123456"/>
 
             <TextView
                 android:id="@+id/enterButton"

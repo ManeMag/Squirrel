@@ -7,23 +7,51 @@
 
     <fragment
         android:id="@+id/nav_fragment_piggy_bank"
-        android:name="com.example.squirrel.fragment_piggy_bank"
+        android:name="com.example.squirrel.PiggyBank"
         android:label="@string/title_piggy_bank"
         tools:layout="@layout/fragment_piggy_bank" >
 
     </fragment>
     <fragment
         android:id="@+id/nav_fragment_statistics"
-        android:name="com.example.squirrel.fragment_statistics"
+        android:name="com.example.squirrel.Statistics"
         android:label="@string/title_statistics"
         tools:layout="@layout/fragment_statistics" >
 
+        <action
+            android:id="@+id/action_nav_fragment_statistics_to_nav_statisticIncome"
+            app:destination="@id/nav_statistic_income" />
+        <action
+            android:id="@+id/action_nav_fragment_statistics_to_nav_statisticSpendings"
+            app:destination="@id/nav_statistic_spendings" />
     </fragment>
     <fragment
         android:id="@+id/nav_fragment_transaction"
-        android:name="com.example.squirrel.Transaction"
+        android:name="com.example.squirrel.TransactionIncome"
         android:label="@string/title_transactions"
         tools:layout="@layout/fragment_transaction" >
 
+
+        <action
+            android:id="@+id/action_nav_fragment_transaction_to_transactionSpendings"
+            app:destination="@id/nav_fragment_transactionSpendings" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_fragment_transactionSpendings"
+        android:name="com.example.squirrel.TransactionSpendings"
+        android:label="@string/title_transactions"
+        tools:layout="@layout/fragment_transaction_spendings" >
+        <action
+            android:id="@+id/action_nav_fragment_transactionSpendings_to_nav_fragment_transaction"
+            app:destination="@id/nav_fragment_transaction" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_statistic_income"
+        android:name="com.example.squirrel.StatisticIncome"
+        android:label="StatisticIncome" />
+    <fragment
+        android:id="@+id/nav_statistic_spendings"
+        android:name="com.example.squirrel.StatisticSpendings"
+        android:label="StatisticSpendings" />
 </navigation>

@@ -3,6 +3,7 @@ using DataAccess.Contexts;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Squirrel.Constants.Wording;
@@ -35,8 +36,8 @@ namespace Squirrel.Controllers
             _localizer = localizer;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryViewModel>>> GetCategories()
+        [HttpGet("{type}")]
+        public async Task<ActionResult<IEnumerable<CategoryViewModel>>> GetCategories(int type)
         {
             var user = _context.Users
                 .Include(u => u.Categories)!
@@ -65,59 +66,80 @@ namespace Squirrel.Controllers
                     .FirstOrDefault();
             }
 
-            return Ok(_mapper.Map<IEnumerable<CategoryViewModel>>(user!.Categories));
+            return Ok(_mapper.Map<IEnumerable<CategoryViewModel>>(user!.Categories?.Where(c => c.Type == (DataAccess.Entities.Type)type || c.Type == 0)));
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateCategory([FromForm] CreateCategoryRequest categoryRequest)
         {
-            var category = _mapper.Map<Category>(categoryRequest);
-
-            var user = _context.Users
-                .Include(u => u.Categories)
-                .Where(u => u.Id == GetUserId())
-                .FirstOrDefault();
-
-            if (user is null)
+            try
             {
-                return BadRequest();
+                var category = _mapper.Map<Category>(categoryRequest);
+
+                var user = _context.Users
+                    .Include(u => u.Categories)
+                    .Where(u => u.Id == GetUserId())
+                    .FirstOrDefault();
+
+                if (user is null)
+                {
+                    return BadRequest();
+                }
+
+                user.Categories!.Add(category);
+                var added = await _context.SaveChangesAsync() > 0;
+
+                if (!added)
+                {
+                    return BadRequest(CannotCreate.Using(_localizer));
+                }
+
+                var categoryResponse = _mapper.Map<CategoryViewModel>(category);
+
+                return CreatedAtAction(nameof(CreateCategory), categoryResponse.Id, categoryResponse);
             }
-
-            user.Categories!.Add(category);
-            var added = await _context.SaveChangesAsync() > 0;
-
-            if (!added)
+            catch (DbUpdateException ex)
             {
-                return BadRequest(CannotCreate.Using(_localizer));
+                if (ex.InnerException is SqliteException && (ex.InnerException as SqliteException)!.SqliteErrorCode == 19)
+                    return BadRequest("This category already exists".Using(_localizer));
             }
-
-            var categoryResponse = _mapper.Map<CategoryViewModel>(category);
-
-            return CreatedAtAction(nameof(CreateCategory), categoryResponse.Id, categoryResponse);
+            return BadRequest(_localizer["Somthing went wrong"].Value);
         }
 
         [HttpPatch]
         public async Task<ActionResult<CategoryViewModel>> UpdateCategory([FromForm] UpdateCategoryRequest categoryRequest)
         {
-            var user = _context.Users
-                .Include(u => u.Categories)
-                .Where(u => u.Id == GetUserId())
-                .FirstOrDefault();
-
-            if (user is null)
+            try
             {
-                return BadRequest();
+                var user = _context.Users
+                    .Include(u => u.Categories)
+                    .Where(u => u.Id == GetUserId())
+                    .FirstOrDefault();
+
+                if (user is null)
+                {
+                    return BadRequest();
+                }
+
+                var category = user.Categories!
+                    .Where(c => c.Id == categoryRequest.Id)
+                    .FirstOrDefault();
+
+                if (category is null)
+                    return NotFound();
+
+                _mapper.Map<UpdateCategoryRequest, Category>(categoryRequest, category);
+
+                return await _context.SaveChangesAsync() > 0
+                    ? Ok(_mapper.Map<CategoryViewModel>(category))
+                    : NoContent();
             }
-
-            var category = user.Categories!
-                .Where(c => c.Id == categoryRequest.Id)
-                .FirstOrDefault();
-
-            _mapper.Map<UpdateCategoryRequest, Category>(categoryRequest, category);
-
-            return await _context.SaveChangesAsync() > 0
-                ? Ok(_mapper.Map<CategoryViewModel>(category))
-                : NoContent();
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqliteException && (ex.InnerException as SqliteException)!.SqliteErrorCode == 19)
+                    return BadRequest("This category already exists".Using(_localizer));
+            }
+            return BadRequest(_localizer["Somthing went wrong"].Value);
         }
 
 
@@ -137,6 +159,11 @@ namespace Squirrel.Controllers
             var category = user.Categories!
                 .Where(c => c.Id == id)
                 .FirstOrDefault();
+
+            if (category is null)
+            {
+                return NotFound();
+            }
 
             if (category!.IsBaseCategory)
             {

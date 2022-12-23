@@ -1,5 +1,13 @@
 package com.example.squirrel.entities
 
-import java.util.Date
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.serialization.Serializable
+@Serializable
+data class Transaction(
+    var id: Int,
+    var time: kotlinx.datetime.LocalDateTime,
+    var amount: Double,
+    var description: String,
+    var categoryId: Int
+)
 
-data class Transaction(var Id: Int, var Time: Date, var Amount: Double, var Description: String,var CategoryId: Int,var Category: Category)

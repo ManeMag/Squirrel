@@ -1,14 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TransactionSpendings">
+    tools:context=".TransactionIncome"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/top_margin_from_toolbar"
+        android:layout_marginBottom="@dimen/vertical_margin_medium"
+        android:gravity="center">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/buttonIncome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="34dp"
+            android:minWidth="120dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/transaction_button_income"
+            android:textSize="22sp"
+            style="@style/button_noactive"/>
+
+        <TextView
+            android:id="@+id/buttonSpendings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="34dp"
+            android:minWidth="120dp"
+            android:layout_marginLeft="15dp"
+            android:text="Spendings"
+            android:textSize="22sp"
+            style="@style/button"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/namePrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vertical_margin_medium"
+        android:hint="@string/transaction_name"
+        style="@style/edit_prompt"/>
+
+    <EditText
+        android:id="@+id/amountPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vertical_margin_medium"
+        android:hint="@string/transaction_sum"
+        android:inputType="numberDecimal"
+        style="@style/edit_prompt"/>
+
+    <FrameLayout
+        android:id="@+id/categoryField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/vertical_margin_medium"
+        android:hint="@string/hint_prompt_login"
+        style="@style/edit_prompt">
+
+
+        <EditText
+            android:id="@+id/categoryText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/prompt_field"
+            android:layout_gravity="start|center"
+            android:layout_marginRight="25dp"
+            android:hint="@string/transaction_choose_category"
+            />
+        <TextView
+            android:id="@+id/categoryPickButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/context_menu_button"
+            android:layout_gravity="end|center"
+            />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/vertical_margin_medium"
+        android:hint="@string/hint_prompt_login"
+        style="@style/edit_prompt">
+
+
+        <EditText
+            android:id="@+id/datePrompt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/prompt_field"
+            android:layout_gravity="start|center"
+            android:layout_marginRight="25dp"
+            android:hint="@string/transaction_choose_date"
+            />
+        <TextView
+            android:id="@+id/datePickButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/calendar_icon"
+            android:layout_gravity="end|center"
+            />
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/createTransactionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vertical_margin_larage"
+        android:minHeight="44dp"
+        android:minWidth="170dp"
+        android:text="@string/transaction_create_button"
+        android:textSize="22sp"
+        style="@style/button"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="@dimen/vertical_margin_larage">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/squirell_logo_2"
+            android:layout_gravity="start|center"
+            android:minWidth="60dp"
+            android:minHeight="60dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/transaction_bottom_text"
+            android:textSize="20sp"
+            android:layout_gravity="end|center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="2dp"
+            />
+    </LinearLayout>
+
+</LinearLayout>

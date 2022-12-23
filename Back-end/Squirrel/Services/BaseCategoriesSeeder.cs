@@ -16,6 +16,9 @@ namespace Squirrel.Services
         private readonly IReadOnlyCollection<Category> _baseCategories = new List<Category>
         {
             new Category { Name = "Other", Color = MainPresentationColor, IsBaseCategory = true },
+            new Category { Name = "Test", Color = MainPresentationColor, IsBaseCategory = true },
+            new Category { Name = "Test2", Color = MainPresentationColor, IsBaseCategory = true },
+            new Category { Name = "Test3", Color ="#666666", IsBaseCategory = true, Type = DataAccess.Entities.Type.Income },
         };
 
         public BaseCategorySeeder(IUnitOfWork uow, ILogger<BaseCategorySeeder> logger, IStringLocalizer<SharedResource> localizer)
@@ -36,7 +39,7 @@ namespace Squirrel.Services
                     return Result.Fail(userResult.Errors);
                 }
 
-                userResult.Value.Categories.AddRange(_baseCategories);
+                userResult.Value.Categories!.AddRange(_baseCategories);
 
                 return Result.Ok(await _uow.Confirm());
             }

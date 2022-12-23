@@ -19,7 +19,7 @@
             android:id="@+id/google_auth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/squirellnew_1"
+            android:background="@drawable/squirell_logo_1"
             android:contentDescription="Squirell"
             tools:ignore="ImageContrastCheck" />
 
