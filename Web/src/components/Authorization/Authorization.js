@@ -1,89 +1,100 @@
 import React from 'react';
 import googleicon from '../../GoogleAuth.svg';
 import abo from '../../or.svg';
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Authorization = () => {
-    const formik = useFormik({
-        initialValues: {
-            email: '',
-            password: '',
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: (values) => {
+      console.log(JSON.stringify(values, null, 2));
+
+      let bodyFormData = new FormData();
+      bodyFormData.append('Email', values.email);
+      bodyFormData.append('Password', values.password);
+
+      axios({
+        method: 'post',
+        url: `http://geneirodan.zapto.org:23451/api/account/authenticate`,
+        data: bodyFormData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Access-Control-Allow-Origin': '*',
         },
-        onSubmit: (values) => {
-            console.log(JSON.stringify(values, null, 2));
+        withCredentials: true,
+      })
+        .then((response) => {
+          toast.success('Welcome!');
+        })
+        .catch((err) => {
+          err.response.data.forEach((message) => {
+            toast.warning(message);
+          });
+        });
+    },
+  });
 
-            let bodyFormData = new FormData();
-            bodyFormData.append('Email', values.email);
-            bodyFormData.append('Password', values.password);
+  return (
+    <>
+      <ToastContainer autoClose={5000} hideProgressBar={true} />
+      <form className="item login" onSubmit={formik.handleSubmit}>
+        <div className="items image">
+          <img src={googleicon} alt="google"></img>
+        </div>
+        <div className="items or">
+          <img src={abo} alt="or"></img>
+        </div>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          onChange={formik.handleChange}
+          value={formik.values.email}
+          className="items input inputform"
+          placeholder="Введіть ваш логін"
+          size="30"
+        />
+        <input
+          id="password"
+          name="password"
+          type="password"
+          onChange={formik.handleChange}
+          value={formik.values.password}
+          className="items input inputform"
+          placeholder="Введіть ваш пароль"
+          size="30"
+        />
+        <input
+          className="items button"
+          name="enterbutton"
+          type="submit"
+          value="Авторизуватися"
+        />
+        <a href="/register" className="items rout">
+          Ще немає профілю?
+        </a>
+        <a href="forgot" className="items rout">
+          Забули пароль?
+        </a>
+      </form>
+    </>
+  );
+  // <form className="item login" name="form">
 
-            axios({
-                method: 'post',
-                url: `http://geneirodan.zapto.org:23451/api/account/authenticate`,
-                data: bodyFormData,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Access-Control-Allow-Origin': '*',
-                },
-                withCredentials: true,
-            })
-                .then((response) => {
-                    alert('Welcome!');
-                })
-                .catch((err) => {
-                    alert('Something has gone wrong!');
-                });
-        },
-    });
+  //     <input  name="email" type="email"
+  //            size="30"/>
+  //     <input className="items input inputform" name="password" type="password"
+  //
+  //            />
+  //     <input className="items button" name="enterbutton" type="submit" value="Авторизуватися"/>
 
-    return (
-        <form className="item login" onSubmit={formik.handleSubmit}>
-            <div className="items image">
-                <img src={googleicon} alt="google"></img>
-            </div>
-            <div className="items or">
-                <img src={abo} alt="or"></img>
-            </div>
-            <input
-                id="email"
-                name="email"
-                type="email"
-                onChange={formik.handleChange}
-                value={formik.values.email}
-                className="items input inputform"
-                placeholder="Введіть ваш логін"
-                size="30"
-            />
-            <input
-                id="password"
-                name="password"
-                type="password"
-                onChange={formik.handleChange}
-                value={formik.values.password}
-                className="items input inputform"
-                placeholder="Введіть ваш пароль"
-                size="30"
-            />
-            <input className="items button" name="enterbutton" type="submit" value="Авторизуватися"/>
-            <a href="/register" className="items rout">
-                Ще немає профілю?
-            </a>
-            <a href="forgot" className="items rout">
-                Забули пароль?
-            </a>
-        </form>
-    );
-    // <form className="item login" name="form">
-
-    //     <input  name="email" type="email"
-    //            size="30"/>
-    //     <input className="items input inputform" name="password" type="password"
-    //
-    //            />
-    //     <input className="items button" name="enterbutton" type="submit" value="Авторизуватися"/>
-
-    // </form>
-
+  // </form>
 };
 
 export default Authorization;
