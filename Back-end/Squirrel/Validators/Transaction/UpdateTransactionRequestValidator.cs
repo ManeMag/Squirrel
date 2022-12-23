@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Squirrel.Constants.Validation;
+using Squirrel.Extensions;
 using Squirrel.Requests.Transaction;
 
 namespace Squirrel.Validators.Transaction

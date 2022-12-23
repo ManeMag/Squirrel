@@ -6,6 +6,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.squirrel.Program.Companion.domain
+import com.example.squirrel.Program.Companion.port
+import com.example.squirrel.Program.Companion.protocol
 import com.example.squirrel.databinding.ActivityRegisterBinding
 import io.ktor.client.call.*
 import io.ktor.client.request.forms.*
@@ -14,7 +17,7 @@ import io.ktor.http.*
 import kotlinx.coroutines.launch
 
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : BaseActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
 
@@ -40,7 +43,7 @@ class RegisterActivity : AppCompatActivity() {
         lifecycleScope.launch{
             val response: HttpResponse = Program.client.submitForm(
 
-                url = "${Program.protocol}://${Program.domain}:${Program.port}/api/account/register?callbackurl=www.example.com",
+                url = "$protocol://$domain:$port/api/account/register?callbackurl=www.example.com",
                 formParameters = Parameters.build {
                     append("email", binding.loginPrompt.text.toString())
                     append("password", binding.passwordPrompt.text.toString())
@@ -57,7 +60,6 @@ class RegisterActivity : AppCompatActivity() {
                         Toast.makeText(context, x, Toast.LENGTH_SHORT).show()
                 }
                 catch (e: Exception) {
-                    Log.e("e", e.toString())
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
                 }
             }

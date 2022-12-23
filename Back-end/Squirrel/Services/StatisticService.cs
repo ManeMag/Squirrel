@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
+using Microsoft.Extensions.Localization;
+using Squirrel.Extensions;
 using Squirrel.Responses.Statistics;
 using Squirrel.Responses.Transaction;
 using Squirrel.Services.Abstractions;
@@ -12,13 +14,16 @@ namespace Squirrel.Services
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         public StatisticService(
             IUnitOfWork uow,
-            IMapper mapper)
+            IMapper mapper,
+            IStringLocalizer<SharedResource> localizer)
         {
             _uow = uow;
             _mapper = mapper;
+            _localizer = localizer;
         }
 
         private DateTime UtcNow => DateTime.UtcNow;
@@ -29,8 +34,8 @@ namespace Squirrel.Services
 
         private Result DatesAreValid(DateTime startDate, DateTime endDate)
         {
-            if (startDate > endDate) return Result.Fail("Start date cannot be greater than end date");
-            if (endDate > UtcNow) return Result.Fail("End date cannot be in future");
+            if (startDate > endDate) return Result.Fail("Start date cannot be greater than end date".Using(_localizer));
+            if (endDate > UtcNow) return Result.Fail("End date cannot be in future".Using(_localizer));
 
             return Result.Ok();
         }
@@ -56,7 +61,9 @@ namespace Squirrel.Services
             {
                 StartDate = startDate,
                 EndDate = endDate,
-                Impact = CalculateImpact(transactionsResult.Value)
+                Impact = CalculateImpact(transactionsResult.Value),
+                Income = transactionsResult.Value.Where(t => t.Amount > 0).Sum(t => t.Amount),
+                Outcome = -transactionsResult.Value.Where(t => t.Amount < 0).Sum(t => t.Amount)
             });
         }
 
@@ -92,10 +99,10 @@ namespace Squirrel.Services
 
             if (userResult.IsFailed)
             {
-                return Result.Fail("User not found");
+                return Result.Fail("User not found".Using(_localizer));
             }
 
-            var transactions = userResult.Value.Categories
+            var transactions = userResult.Value.Categories!
                 .SelectMany(c => c.Transactions)
                 .Where(t => startDate <= t.Time && t.Time <= endDate)
                 .ToList();

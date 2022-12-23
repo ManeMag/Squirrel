@@ -46,18 +46,18 @@ class TransactionIncome:Fragment(R.layout.fragment_transaction), DatePickerDialo
         layout.findViewById<TextView>(R.id.buttonSpendings).setOnClickListener {
             findNavController().navigate(R.id.action_nav_fragment_transaction_to_transactionSpendings)
         }
-        layout.findViewById<TextView>(R.id.buttonIncome).setOnClickListener {
-            findNavController().navigate(R.id.action_nav_fragment_transactionSpendings_to_nav_fragment_transaction)
-        }
 
         layout.findViewById<TextView>(R.id.datePickButton).setOnClickListener() {
-            DatePickerDialog(
+            val dialog = DatePickerDialog(
                 requireContext(),
                 this,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+
+            )
+            dialog.datePicker.maxDate = Date().time
+            dialog.show()
         }
 
         layout.findViewById<EditText>(R.id.categoryText).setEnabled(false)

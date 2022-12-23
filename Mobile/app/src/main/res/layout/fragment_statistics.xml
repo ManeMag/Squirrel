@@ -7,11 +7,11 @@
     tools:context=".Statistics">
     <TextView
         android:visibility="visible"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:id="@+id/calendar_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginRight="22dp"
+        android:layout_marginEnd="22dp"
         android:layout_marginTop="22dp"
         android:paddingHorizontal="@dimen/toolbar_text_horizontal_padding"
         android:background="@drawable/calendar_white_icon"
@@ -49,10 +49,11 @@
             android:layout_height="wrap_content"
             android:minHeight="34dp"
             android:minWidth="120dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
             android:text="@string/transaction_button_income"
             android:background="@drawable/radio_button"
-            style="@style/radio_button"/>
+            style="@style/radio_button"
+            android:checked="true"/>
 
         <RadioButton
             android:id="@+id/buttonSpendings"
@@ -62,8 +63,8 @@
             android:minHeight="34dp"
             android:minWidth="120dp"
             android:background="@drawable/radio_button"
-            android:layout_marginLeft="15dp"
-            android:text="Spendings"
+            android:layout_marginStart="15dp"
+            android:text="@string/spendings"
             style="@style/radio_button"/>
 
     </RadioGroup>
