@@ -170,11 +170,30 @@ class Statistics : Fragment(R.layout.fragment_statistics), DatePickerDialog.OnDa
             Log.e("Body", response.body())
             if (response.status == HttpStatusCode.OK) {
                 val statistics: com.example.squirrel.models.Statistics = response.body()
+                val income = mutableListOf<Transaction>()
+                val spendings = mutableListOf<Transaction>()
+                statistics.transactions.forEach {
+                    if(it.amount > 0)
+                        income.add(it)
+                    else
+                        spendings.add(it)
+                }
                 val values: ArrayList<PieEntry> = ArrayList()
-                values.add(PieEntry(statistics.outcome.toFloat(), "Spendings"))
-                values.add(PieEntry(statistics.income.toFloat(), "Income"))
+                values.add(PieEntry(statistics.outcome.toFloat(), getString(R.string.spendings)))
+                values.add(PieEntry(statistics.income.toFloat(), getString(R.string.income)))
                 chartStyle(spendingsIncomeRatioChart)
                 setData(spendingsIncomeRatioChart, values)
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.nastedFragmetsLayout, StatisticIncome(income, statistics.impact)).commit()
+                layout.findViewById<RadioGroup>(R.id.radioGroup)
+                    .setOnCheckedChangeListener { _, checkedId ->
+                        when (checkedId) {
+                            R.id.buttonSpendings -> parentFragmentManager.beginTransaction()
+                                .replace(R.id.nastedFragmetsLayout, StatisticSpendings(spendings, statistics.impact)).commit()
+                            R.id.buttonIncome -> parentFragmentManager.beginTransaction()
+                                .replace(R.id.nastedFragmetsLayout, StatisticIncome(income, statistics.impact)).commit()
+                        }
+                    }
                 displayFormattedDate(calendar.timeInMillis)
             }
         }
