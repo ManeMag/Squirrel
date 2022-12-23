@@ -1,14 +1,24 @@
 package com.example.squirrel
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.squirrel.Program.Companion.client
+import com.example.squirrel.Program.Companion.domain
+import com.example.squirrel.Program.Companion.port
+import com.example.squirrel.Program.Companion.protocol
 import com.example.squirrel.entities.Category
+import com.example.squirrel.entities.Transaction
+import com.example.squirrel.models.Impact
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -19,124 +29,141 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.launch
 
-class StatisticSpendings: Fragment(R.layout.fragment_statistic_spendings) {
+class StatisticSpendings(
+    private val transactions: List<Transaction>,
+    private val impact: List<Impact>
+) : Fragment(R.layout.fragment_statistic_spendings) {
     private lateinit var layout: View
     private lateinit var IncomeChart: PieChart
     var listCategory = emptyList<Category>()
+    var viewList = mutableListOf<Transaction>()
+    var colors = mutableMapOf<Int, Int>()
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.layout = view
 
 
-        IncomeChart = layout.findViewById<PieChart>(R.id.income_chart)
-        chartStyle(IncomeChart)
-        setData(1,100,IncomeChart)
-
-
         lifecycleScope.launch {
             val response: HttpResponse =
-                Program.client.get("${Program.protocol}://${Program.domain}:${Program.port}/api/category/0")
+                client.get("$protocol://$domain:$port/api/category/2")
             if (response.status == HttpStatusCode.OK) {
                 listCategory = response.body()
             } else {
                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show()
             }
 
-            val rowsCategory = listCategory.size
-            val columnsCategory = 2
-            val tableLayoutCategory = layout.findViewById<TableLayout>(R.id.category_layout)
-            for (i in 0 until rowsCategory) {
-                val tableRow = TableRow(layout.context)
-                tableRow.setLayoutParams(
-                    TableRow.LayoutParams(
+            val tableLayoutCategory = layout.findViewById<RadioGroup>(R.id.category_layout)
+            listCategory.indices.forEach {
+                colors.put(
+                    listCategory[it].id,
+                    255 shl 24 or listCategory[it].color.substring(1).toInt(16)
+                )
+                with(RadioButton(layout.context)) {
+                    layoutParams = TableRow.LayoutParams(
                         TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.WRAP_CONTENT
                     )
-                )
-                val imageView = ImageView(layout.context)
-                var drawable =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.category_color_icon)
-                var gradientDrawable = drawable as GradientDrawable
-                gradientDrawable.setColor(
-                    255 shl 24 or listCategory[i].color.substring(1).toInt(16)
-                )
-                imageView.setImageDrawable(gradientDrawable)
-                imageView.setPadding(70, 15, 20, 20)
-
-                var categoryName = TextView(layout.context)
-                categoryName.textSize = 20f
-                categoryName.setText(listCategory[i].name)
-
-                tableRow.addView(imageView, 0)
-                tableRow.addView(categoryName, 1)
-                tableLayoutCategory.addView(tableRow, i)
-            }
-
-
-
-            var listTransactions = ArrayList<String>()
-            var listTransactions1 = ArrayList<String>()
-            for (i in 0 until 5) {
-                listTransactions.add("300")
-                listTransactions1.add("sdadasdasdad")
-            }
-
-
-            val rowsTransaction = listTransactions.size
-            val columnsTransaction = 2
-            val tableLayout = layout.findViewById<TableLayout>(R.id.transaction_layout)
-            for (i in 0 until rowsTransaction) {
-                val tableRow = TableRow(layout.context)
-                tableRow.setLayoutParams(
-                    TableRow.LayoutParams(
-                        TableRow.LayoutParams.MATCH_PARENT,
-                        TableRow.LayoutParams.WRAP_CONTENT
+                    val gradientDrawable = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.category_color_icon
+                    ) as GradientDrawable
+                    gradientDrawable.setColor(
+                        255 shl 24 or listCategory[it].color.substring(1).toInt(16)
                     )
-                )
-
-                var TransactionName = TextView(layout.context)
-                var TransactionValue = TextView(layout.context)
-                TransactionName.textSize = 20f
-                TransactionName.setText(listTransactions1[i])
-                TransactionName.setPadding(25, 15, 0, 0)
-                TransactionValue.textSize = 20f
-                TransactionValue.setText("-" + listTransactions[i] + "$")
-                TransactionValue.setTextColor(Color.GREEN)
-
-                tableRow.addView(TransactionValue, 0)
-                tableRow.addView(TransactionName, 1)
-                tableLayout.addView(tableRow, i)
+                    setPadding(15)
+                    background =
+                        ContextCompat.getDrawable(context, R.drawable.radio_button_category)
+                    buttonDrawable = gradientDrawable
+                    gravity = Gravity.CENTER
+                    textSize = 20f
+                    id = listCategory[it].id
+                    text = listCategory[it].name
+                    tableLayoutCategory.addView(this, it)
+                }
+            }
+            tableLayoutCategory.setOnCheckedChangeListener { buttonView, id ->
+                with(viewList) {
+                    clear()
+                    transactions.forEach {
+                        Log.e("ID", id.toString())
+                        Log.e("itID", it.id.toString())
+                        Log.e("amount", it.amount.toString())
+                        if (it.categoryId == id) {
+                            add(it)
+                        }
+                    }
+                }
+                with(layout.findViewById<TableLayout>(R.id.transaction_layout)) {
+                    removeAllViews()
+                    viewList.forEach {
+                        TableRow(layout.context).apply {
+                            layoutParams = TableRow.LayoutParams(
+                                TableRow.LayoutParams.MATCH_PARENT,
+                                TableRow.LayoutParams.WRAP_CONTENT
+                            )
+                            with(TextView(layout.context)) {
+                                textSize = 20f
+                                text = "${it.amount}$"
+                                setTextColor(Color.RED)
+                                this@apply.addView(this, 0)
+                            }
+                            with(TextView(layout.context)) {
+                                textSize = 20f
+                                text = it.description
+                                setPadding(25, 15, 0, 0)
+                                this@apply.addView(this, 1)
+                            }
+                            this@with.addView(this@apply)
+                        }
+                    }
+                }
             }
 
+
+            IncomeChart = layout.findViewById(R.id.income_chart)
+            chartStyle(IncomeChart)
+            setData(IncomeChart)
         }
     }
 
-    fun setData(count: Int,range: Int,mChart: PieChart){
+    private fun setData(mChart: PieChart) {
         val values: ArrayList<PieEntry> = ArrayList()
 
-        values.add(PieEntry(9600f,"Spendings"))
-        values.add(PieEntry(3200f,"Income"))
-
-        var dataSet: PieDataSet = PieDataSet(values,"")
-        val colorsOfChartRGB: ArrayList<Int> = arrayListOf(255 shl 24 or "E53F3F".toInt(16), 255 shl 24 or "18C715".toInt(16))
-        dataSet.setColors(colorsOfChartRGB)
-        dataSet.setDrawValues(false)
-        dataSet.sliceSpace = 2f
-        dataSet.selectionShift = 0f
-        dataSet.selectionShift = 4f
-        var data: PieData = PieData(dataSet)
-        mChart.data = data
-        mChart.invalidate()
+        val colorsOfChartRGB = mutableListOf<Int>()
+        with(values) {
+            impact.forEach {
+                Log.e("id", it.negativePercentage.toString())
+                if(listCategory.any{category -> category.id == it.categoryId } && it.negativePercentage > 0){
+                    add(PieEntry(it.negativePercentage.toFloat()))
+                    colorsOfChartRGB.add(colors.get(it.categoryId)!!)
+                }
+            }
+        }
+        with(PieDataSet(values, "")) {
+            colors = colorsOfChartRGB
+            this.setDrawValues(false)
+            sliceSpace = 2f
+            selectionShift = 0f
+            selectionShift = 4f
+            mChart.data = PieData(this)
+            mChart.invalidate()
+        }
     }
 
-    fun chartStyle(mChart: PieChart){
+    private fun chartStyle(mChart: PieChart) {
         mChart.setDrawSliceText(false);
-        mChart.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.main_background))
+        mChart.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.main_background
+            )
+        )
         mChart.isDrawHoleEnabled = false
         mChart.isRotationEnabled = false
         mChart.description.isEnabled = false
-        mChart.setUsePercentValues(false)
-        mChart.getLegend().setEnabled(false)
+        mChart.setUsePercentValues(true)
+        mChart.legend.isEnabled = false
     }
 }

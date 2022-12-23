@@ -112,10 +112,10 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
 }
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseDeveloperExceptionPage();
 app.UseCors(builder => builder
     .WithOrigins("http://localhost:3000",
                  "http://195.149.108.41",

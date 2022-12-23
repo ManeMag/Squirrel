@@ -57,8 +57,8 @@ namespace Squirrel.Controllers
             if (model.Same())
             {
                 var user = _mapper.Map<User>(model);
-                try
-                {
+                //try
+                //{
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
@@ -78,17 +78,17 @@ namespace Squirrel.Controllers
                         return CreatedAtAction("Register", user);
                     }
                     return BadRequest(result.Errors.Select(e => e.Description));
-                }
-                catch (MimeKit.ParseException)
-                {
-                    await _userManager.DeleteAsync(user);
-                    return BadRequest(new[] { _localizer["Invalid email"].Value });
-                }
-                catch
-                {
-                    await _userManager.DeleteAsync(user);
-                    return BadRequest(new[] { _localizer["Something went wrong. Please try again"].Value });
-                }
+                //}
+                //catch (MimeKit.ParseException)
+                //{
+                //    await _userManager.DeleteAsync(user);
+                //    return BadRequest(new[] { _localizer["Invalid email"].Value });
+                //}
+                //catch
+                //{
+                //    await _userManager.DeleteAsync(user);
+                //    return BadRequest(new[] { _localizer["Something went wrong. Please try again"].Value });
+                //}
             }
             return "Passwords are not the same".ToBadRequestUsing(_localizer);
         }

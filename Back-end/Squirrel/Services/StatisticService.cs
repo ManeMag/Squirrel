@@ -35,7 +35,7 @@ namespace Squirrel.Services
         private Result DatesAreValid(DateTime startDate, DateTime endDate)
         {
             if (startDate > endDate) return Result.Fail("Start date cannot be greater than end date".Using(_localizer));
-            if (endDate > UtcNow) return Result.Fail("End date cannot be in future".Using(_localizer));
+            //if (endDate > UtcNow) return Result.Fail("End date cannot be in future".Using(_localizer));
 
             return Result.Ok();
         }
@@ -61,6 +61,7 @@ namespace Squirrel.Services
             {
                 StartDate = startDate,
                 EndDate = endDate,
+                Transactions = transactionsResult.Value,
                 Impact = CalculateImpact(transactionsResult.Value),
                 Income = transactionsResult.Value.Where(t => t.Amount > 0).Sum(t => t.Amount),
                 Outcome = -transactionsResult.Value.Where(t => t.Amount < 0).Sum(t => t.Amount)
@@ -75,7 +76,8 @@ namespace Squirrel.Services
 
         private IEnumerable<TransactionImpact> CalculateImpact(IEnumerable<TransactionViewModel> transactions)
         {
-            var total = transactions.Sum(t => t.Amount);
+            var totalNegative = transactions.Where(x => x.Amount < 0).Sum(t => t.Amount);
+            var totalPositive = transactions.Where(x => x.Amount > 0).Sum(t => t.Amount);
 
             var transactionGroupedByCategoryId = transactions
                 .GroupBy(t => t.CategoryId)
@@ -84,11 +86,13 @@ namespace Squirrel.Services
             foreach (var transaction in transactionGroupedByCategoryId)
             {
                 var categoryId = transaction.Key;
-                var transactionsSum = transaction.Sum(x => x.Amount);
-                var percentage = Math.Round((decimal)transactionsSum / (decimal)total, 2) * 100;
+                var income = transaction.Where(x => x.Amount > 0).Sum(x => x.Amount);
+                var outcome = transaction.Where(x => x.Amount < 0).Sum(x => x.Amount);
+                var positivePercentage = totalPositive != 0 ? Math.Round((decimal)income / (decimal)totalPositive, 2) * 100 : 0;
+                var negativePercentage = totalNegative != 0 ? Math.Round((decimal)outcome / (decimal)totalNegative, 2) * 100 : 0;
                 var count = transaction.Count();
 
-                yield return new TransactionImpact(categoryId, percentage, transactionsSum, count);
+                yield return new TransactionImpact(categoryId, positivePercentage, income, negativePercentage, outcome, count);
             }
         }
 
